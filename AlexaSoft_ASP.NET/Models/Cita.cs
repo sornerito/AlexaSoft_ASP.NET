@@ -1,0 +1,37 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace AlexaSoft_ASP.NET.Models;
+
+public partial class Cita
+{
+    public int IdCita { get; set; }
+
+    public DateTime Fecha { get; set; }
+
+    public TimeSpan Hora { get; set; }
+
+    public string? Detalle { get; set; }
+
+    public string Estado { get; set; } = null!;
+
+    public int? IdMotivoCancelacion { get; set; }
+
+    public int IdCliente { get; set; }
+
+    public int IdPaquete { get; set; }
+
+    public int IdHorario { get; set; }
+
+    public int IdColaborador { get; set; }
+
+    public virtual Cliente IdClienteNavigation { get; set; } = null!;
+
+    public virtual Colaboradore IdColaboradorNavigation { get; set; } = null!;
+
+    public virtual Horario IdHorarioNavigation { get; set; } = null!;
+
+    public virtual Motivoscancelacion? IdMotivoCancelacionNavigation { get; set; }
+
+    public virtual Paquete IdPaqueteNavigation { get; set; } = null!;
+}
