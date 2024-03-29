@@ -1,42 +1,94 @@
 ﻿@model IEnumerable<AlexaSoft_ASP.NET.Models.Role>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] ="Roles";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Estado)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estado)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdRol">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdRol">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdRol">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="container">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+          <h1 class="text-center">Roles</h1>
+        </div>
+        <div class="col-3"></div>
+      </div> <!--Fin Row-->
+</div>
+
+    <div class="container">
+        <div class="mb-3 row">
+            <div>
+              <a asp-action="Create" class="btn btn-lg fondoVino text-light">Crear Rol</a>
+            </div>
+          </div><!--Fin Row-->
+        <table class="table fs-5 table-bordered table-responsive " style="overflow:auto;">
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 10%;">ID</th>
+                    <th scope="col" style="width: 20%;">Nombre</th>
+                    <th scope="col" style="width: 60%;">Permisos</th>
+                    <th scope="col" style="width: 10%;" class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                @foreach(var item in Model){
+                <tr>
+                    <td scope="col" style="width: 10%;">@item.IdRol</td>
+                    <td scope="col" style="width: 20%;">@item.Nombre</td>
+                    <td scope="col" style="width: 60%;">
+                        <p>
+                            @string.Join(", ", item.RolesPermisos.Select(rp => rp.IdPermisoNavigation.Nombre))
+						</p>
+
+                    </td>
+                    <td scope="col" style="width: 10%;" class="text-center">
+
+                        <div class="nav-item dropdown" style="position:static;">
+                            <a class="nav-link textoNav" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-ellipsis-h fa-1x text-black"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li class="text-center px-3">
+                                    <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.IdRol">
+                                        <i class="fa fa-pencil fa-lg"></i> Modificar
+                                    </a>
+                                </li>
+                                <hr class="dropdown-divider">
+                                <li class="text-center px-3">
+                                    <p class="m-0">
+                                        Estado:
+                    
+                                        <div class="form-check form-switch d-inline-block">
+                                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @(item.Estado == "Activo" ? "checked" : "") onchange="cambiarEstado('@item.IdRol')">
+                                        </div>
+                    
+                                    </p>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                    </td>
+                </tr>
+                }
+                
+                
+            </tbody>
+        </table>
+    
+</div>
+
+<script>
+    function cambiarEstado(idRol) {
+        $.ajax({
+            url: '@Url.Action("CambiarEstado", "Roles")',
+            type: 'POST',
+            data: { idRol: idRol },
+            success: function (data) {
+            },
+            error: function (xhr, status, error) {
+            }
+        });
+    }
+</script>

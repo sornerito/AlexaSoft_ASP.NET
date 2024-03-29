@@ -9,7 +9,7 @@ public partial class Permiso
 
     public string Nombre { get; set; } = null!;
 
-    public int Descripcion { get; set; }
+    public string Descripcion { get; set; } = null!;
 
     public virtual ICollection<RolesPermiso> RolesPermisos { get; set; } = new List<RolesPermiso>();
 }

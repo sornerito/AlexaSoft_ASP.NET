@@ -1,39 +1,191 @@
 ﻿@model AlexaSoft_ASP.NET.Models.Role
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Crear Rol";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
-
-<h4>Role</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
+<div class="container">
+        <div class="row">
+            <div class="col-3">
+                <div onclick="volver()" class="text-center">
+                    <i class="fa fa-angle-left fa-3x clickeable"></i>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Estado" class="control-label"></label>
-                <input asp-for="Estado" class="form-control" />
-                <span asp-validation-for="Estado" class="text-danger"></span>
+            <div class="col-6">
+                <h1 class="text-center">Crear Rol</h1>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="col-3">
             </div>
-        </form>
+        </div> <!--Fin Row-->
     </div>
-</div>
+    <br><br>
+    <div class="container bordeVino px-4">
+        <br>
+         <div class="row">
+            <div class="col-4">
+                <div class="d-flex" role="search">
+                <input type="text" class="form-control me-2" id="buscar" placeholder="Buscar Permiso" aria-label="Search">
+                <button class="btn fondoOro" id="boton-buscar">Buscar</button>
+            </div>
+            <div class="col-2">
+                
+                </div>
+            </div>
+        </div> <!--Fin Row--> 
+        <br>
+    <form method="post" asp-action="Create" id="formularioCrearRol">
+            <div class="row">
+                <div class="col-6">
+                    <div class="mb-3 row">
+                        <label class="fs-4 col-3 col-form-label">Nombre:</label>
+                        <div class="col-9">
+                            <input type="text" class="fs-4 form-control" asp-for="Nombre" id="nombre"
+                                placeholder="Nombre del Rol">
+                                <input type="hidden" asp-for="Estado" value="Activo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+            <div class="table-responsive bordeVino" style="max-height: 350px;min-height: 350px;">
+            <table id="tabla-permisos" class="table fs-5 table-bordered table-responsive">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 10%;">ID</th>
+                            <th scope="col" style="width: 20%;">Nombre Permiso</th>
+                            <th scope="col" style="width: 60%;">Descripcion</th>
+                            <th scope="col" style="width: 10%;" class="text-center">Asociar</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                    @foreach (var item in ViewBag.Permisos)
+                    {
+                        <tr>
+                            <td scope="col" style="width: 10%;">@item.IdPermiso</td>
+                            <td scope="col" style="width: 20%;">@item.Nombre</td>
+                            <td scope="col" style="width: 60%;">
+                                <p>@item.Descripcion</p>
 
+                            </td>
+                            <td scope="col" style="width: 10%;" class="text-center">
+
+                                <div class="form-check form-switch d-inline-block">
+                                    <input class="form-check-input" type="checkbox" name="permisos" id="checkbox-@item.IdPermiso" value="@item.IdPermiso" id="flexSwitchCheckDefault">
+                                </div>
+
+
+                            </td>
+                        </tr>
+                    }
+                    
+                        
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <div class="mb-3 row">
+                <div class="text-center">
+                    <button type="button" id="botonCrear" class="btn btn-lg fondoVino text-light">Crear
+                        Rol</button>
+                </div>
+            </div><!--Fin Row-->
+        </form>
+
+        <br>
+    </div>
+
+    
+
+    <script>
+
+        //Enviar Formulario
+        document.getElementById("botonCrear").addEventListener("click", async (e) => {
+            e.preventDefault();
+            let nombre = document.getElementById("nombre").value;
+            if (nombre) {
+                await guardarRol()
+            } else {
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "Revisa que los campos no esten vacios"
+                })
+            }
+        })
+        //Salir input nombre
+        document.getElementById("nombre").addEventListener("focusout", (e) => {
+            e.preventDefault();
+            let nombre = document.getElementById("nombre").value;
+            if (nombre == "") {
+                campoVacio("nombre")
+            }
+        })
+        //Alerta campo vacio
+        function campoVacio(campo) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'El campo ' + campo + " no puede estar vacio"
+            })
+        }
+
+        //Funcion Volver
+        function volver() {
+            window.history.back();
+        }
+
+        //Confirmar guardar
+        function guardarRol() {
+            Swal.fire({
+                title: '¿Quieres crear el rol?',
+                showCancelButton: true,
+                confirmButtonText: 'Si',
+                cancelButtonText: "No"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Creando Rol...',
+                        timer: 2000,
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                        icon: "success"
+                    }).then(() => {
+                    document.getElementById("formularioCrearRol").submit();//subir formulario
+                    });
+                } else if (result.isDenied) {
+                    Swal.fire('No se creó el rol', '', 'info');
+                }
+            });
+        }
+
+
+        //Listener para el buscar
+    document.getElementById("boton-buscar").addEventListener("click", function () {
+        var input, filtro, tabla, tr, td, i, valor;
+        input = document.getElementById("buscar");
+        filtro = input.value.toUpperCase();
+        tabla = document.getElementById("tabla-permisos");
+        tr = tabla.getElementsByTagName("tr");
+
+        // Itera sobre todas las filas y oculta aquellas que no coincidan con el filtro
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td");
+            for (var j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    valor = td[j].textContent || td[j].innerText;
+                    if (valor.toUpperCase().indexOf(filtro) > -1) {
+                        tr[i].style.display = "";
+                        break; // Sale del bucle interno
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    });
+    </script>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
