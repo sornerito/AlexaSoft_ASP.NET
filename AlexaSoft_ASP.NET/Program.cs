@@ -7,6 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AlexasoftContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("conexion")));
+builder.Services.AddSession(options =>
+{
+});
+builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -14,6 +18,7 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
 }
+app.UseSession();
 app.UseStaticFiles();
 
 app.UseRouting();

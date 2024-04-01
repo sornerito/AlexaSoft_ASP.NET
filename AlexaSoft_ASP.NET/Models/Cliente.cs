@@ -13,7 +13,7 @@ public partial class Cliente
 
     public string Telefono { get; set; } = null!;
 
-    public string Instagram { get; set; } = null!;
+    public string? Instagram { get; set; } = null!;
 
     public string Contrasena { get; set; } = null!;
 

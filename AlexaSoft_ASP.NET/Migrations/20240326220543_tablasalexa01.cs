@@ -83,7 +83,7 @@ namespace AlexaSoft_ASP.NET.Migrations
                     idPermiso = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    descripcion = table.Column<int>(type: "int", nullable: false)
+                    descripcion = table.Column<string>(type: "nvarchar(50)", maxLength: 200, nullable: false),
                 },
                 constraints: table =>
                 {

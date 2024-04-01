@@ -554,7 +554,9 @@ namespace AlexaSoft_ASP.NET.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdPermiso"));
 
                     b.Property<int>("Descripcion")
-                        .HasColumnType("int")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
                         .HasColumnName("descripcion");
 
                     b.Property<string>("Nombre")

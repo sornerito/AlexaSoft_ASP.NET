@@ -1,9 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@inject IHttpContextAccessor HttpContextAccessor
+@using Newtonsoft.Json;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - AlexaSoft_ASP.NET</title>
+    <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/estiloGeneral.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -17,6 +19,23 @@
 
 </head>
 <body>
+
+    @{
+
+        var permisosJson = HttpContextAccessor.HttpContext.Session.GetString("Permisos");
+        List<dynamic> permisos = new List<dynamic>();
+
+        if (!string.IsNullOrEmpty(permisosJson))
+        {
+            permisos = JsonConvert.DeserializeObject<List<dynamic>>(permisosJson);
+        }
+
+        bool TienePermiso(string permisoRequerido)
+        {
+            return permisos.Any(p => p.Nombre == permisoRequerido);
+        }
+    }
+
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -28,8 +47,31 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
+                        </li>
+                        @if (!string.IsNullOrEmpty(permisosJson) && TienePermiso("Gestionar Roles"))
+                        {
+                            <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">Roles</a>
                         </li>
+                        }
+            
+                        @if (!string.IsNullOrEmpty(permisosJson))
+                        {
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="CerrarSesion">Cerrar Sesión</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Registro">Registrate</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Login">Inicia Sesión</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
