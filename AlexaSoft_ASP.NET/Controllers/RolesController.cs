@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AlexaSoft_ASP.NET.Models;
+using AlexaSoft_ASP.NET.Utilities;
 
 namespace AlexaSoft_ASP.NET.Controllers
 {
@@ -21,46 +22,59 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Roles
         public async Task<IActionResult> Index()
         {
-              return _context.Roles != null ? 
-                          View(await _context.Roles.ToListAsync()) :
-                          Problem("Entity set 'AlexasoftContext.Roles'  is null.");
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Roles"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            var rolesConPermisos = _context.Roles
+            .Include(r => r.RolesPermisos)
+                .ThenInclude(rp => rp.IdPermisoNavigation) 
+            .ToList();
+
+            return View(rolesConPermisos);
         }
 
-        // GET: Roles/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Roles == null)
-            {
-                return NotFound();
-            }
-
-            var role = await _context.Roles
-                .FirstOrDefaultAsync(m => m.IdRol == id);
-            if (role == null)
-            {
-                return NotFound();
-            }
-
-            return View(role);
-        }
+        
 
         // GET: Roles/Create
         public IActionResult Create()
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Roles"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            var permisos = _context.Permisos.ToList();
+            ViewBag.Permisos = permisos;
             return View();
         }
 
         // POST: Roles/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdRol,Nombre,Estado")] Role role)
+        public async Task<IActionResult> Create(Role role, double[] permisos)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Roles"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (ModelState.IsValid)
             {
-                _context.Add(role);
-                await _context.SaveChangesAsync();
+                _context.Roles.Add(role);
+                _context.SaveChanges();
+
+                foreach (int permisoId in permisos)
+                {
+
+                    RolesPermiso rolesPermiso = new RolesPermiso
+                    {
+                        IdRol = role.IdRol,              
+                        IdPermiso = permisoId
+                    };
+
+                    _context.RolesPermisos.Add(rolesPermiso);
+                    _context.SaveChanges();
+                }
+                
                 return RedirectToAction(nameof(Index));
             }
             return View(role);
@@ -69,37 +83,73 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Roles/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Roles == null)
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Roles"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            var rol = await _context.Roles
+            .Include(r => r.RolesPermisos)
+            .ThenInclude(rp => rp.IdPermisoNavigation) 
+            .FirstOrDefaultAsync(r => r.IdRol == id);
+            if (rol == null)
             {
                 return NotFound();
             }
-
-            var role = await _context.Roles.FindAsync(id);
-            if (role == null)
-            {
-                return NotFound();
-            }
-            return View(role);
+            var permisos = _context.Permisos.ToList();
+            ViewBag.Permisos = permisos;
+            return View(rol);
         }
 
-        // POST: Roles/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Roles/Edit/
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdRol,Nombre,Estado")] Role role)
+        public async Task<IActionResult> Edit(int id, [Bind("IdRol,Nombre,Estado")] Role role, int[] permisos)
         {
-            if (id != role.IdRol)
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Roles"))
             {
-                return NotFound();
+                return RedirectToAction("Error", "Home");
             }
-
             if (ModelState.IsValid)
             {
                 try
                 {
+                    //Guarda datos de la tabla Rol (solo el nombre practicamente)
                     _context.Update(role);
+                    await _context.SaveChangesAsync();//actualiza cambios
+
+                    //el rol con los registros que le corresponden de la tabla RolesPermisos
+                    var rol = await _context.Roles
+                        .Include(r => r.RolesPermisos)
+                        .FirstOrDefaultAsync(r => r.IdRol == id);
+                    
+                    //le hace un ciclo a cada registro, y revisa que este dentro de los permisos enviados en el formulario
+                    foreach (var rp in rol.RolesPermisos.ToList())
+                    {
+                        if (!permisos.Contains(rp.IdPermiso))
+                        {
+                            //si en la lista de checkboxes ya no se encuentra el id, significa que hay que removerlo
+                            _context.RolesPermisos.Remove(rp);
+                        }
+                    }
+
+                    //esta lista reccorre los checkboxes (idPermisos) enviados por el formulario
+                    foreach (var permisoId in permisos)
+                    {
+                        //Si un permiso ENVIADO no coincide con ninguno de los permisos que ya estaban, SE CREA
+                        if (!rol.RolesPermisos.Any(rp => rp.IdPermiso == permisoId))
+                        {
+                            RolesPermiso rolesPermiso = new RolesPermiso
+                            {
+                                IdRol = role.IdRol,
+                                IdPermiso = permisoId
+                            };
+                            _context.RolesPermisos.Add(rolesPermiso);
+                        }
+                        //Si se encuentra el Id ENVIADO en los Ids que YA ESTABAN, no se hace nada
+                    }
+                    //Se guardan los cambios una sola vez
                     await _context.SaveChangesAsync();
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -117,41 +167,23 @@ namespace AlexaSoft_ASP.NET.Controllers
             return View(role);
         }
 
-        // GET: Roles/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [HttpPost]
+        public async Task<IActionResult> CambiarEstado(int idRol)
         {
-            if (id == null || _context.Roles == null)
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Roles"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            var rol = await _context.Roles.FindAsync(idRol);
+            if (rol == null)
             {
                 return NotFound();
             }
 
-            var role = await _context.Roles
-                .FirstOrDefaultAsync(m => m.IdRol == id);
-            if (role == null)
-            {
-                return NotFound();
-            }
-
-            return View(role);
-        }
-
-        // POST: Roles/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Roles == null)
-            {
-                return Problem("Entity set 'AlexasoftContext.Roles'  is null.");
-            }
-            var role = await _context.Roles.FindAsync(id);
-            if (role != null)
-            {
-                _context.Roles.Remove(role);
-            }
-            
+            rol.Estado = rol.Estado == "Activo" ? "Desactivado" : "Activo";
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            return Ok();
         }
 
         private bool RoleExists(int id)

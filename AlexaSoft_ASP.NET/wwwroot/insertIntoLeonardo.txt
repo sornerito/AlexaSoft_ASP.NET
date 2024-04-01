@@ -1,0 +1,75 @@
+﻿
+--Crear los 3 roles
+INSERT INTO alexa_soft.roles (nombre, estado) VALUES ('Usuario', 'Activo'), ('Cliente', 'Activo'), ('Colaborador', 'Activo')
+
+--cambiar tipo de dato del campo descripcion
+alter table alexa_soft.permisos alter column descripcion nvarchar(200)
+
+--permitir que el instagram sea opcional
+ALTER TABLE alexa_soft.clientes
+ALTER COLUMN instagram nvarchar(30) NULL;
+
+--meter datos a permisos
+INSERT INTO alexa_soft.permisos (nombre, descripcion) VALUES
+('Gestionar Roles', 'El usuario podra gestionar los roles del aplicativo'),
+('Gestionar Usuarios', 'El usuario podra gestionar los usuarios en el aplicativo'),
+('Gestionar Insumos', 'El usuario podra gestionar los insumos del aplicativo'),
+('Gestionar Compras', 'El usuario podra gestionar las compras y los productos asociados al detalle del aplicativo'),
+('Gestionar Proveedores', 'El usuario podra gestionar los proveedores del aplicativo'),
+('Gestionar Productos', 'El usuario podra gestionar los productos del aplicativo'),
+('Gestionar Categoria de Productos', 'El usuario podra gestionar la categoria de los productos del aplicativo'),
+('Gestionar Servicios', 'El usuario podra gestionar los servicios del aplicativo'),
+('Gestionar Paquetes', 'El usuario podra gestionar los paquetes del aplicativo'),
+('Gestionar Ventas', 'El usuario podra gestionar las ventas del aplicativo'),
+('Gestionar Pedidos', 'El usuario podra gestionar los pedidos del aplicativo'),
+('Gestionar Clientes', 'El usuario podra gestionar los clientes del aplicativo o su propia persona, dependiendo del aplicativo'),
+('Gestionar Horario', 'El usuario podra gestionar el horario del aplicativo'),
+('Gestionar Agendamiento', 'El usuario podra gestionar el agendamiento (citas) del aplicativo'),
+('Gestionar Colaboradores', 'El usuario podra gestionar los colaboradores del aplicativo')
+
+
+--crear union roles y permisos, son de "simulacro" y no contempla al 100% la matriz de usuario
+--CAMBIAR DATOS SI NO COINCIDEN
+INSERT INTO alexa_soft.roles_permisos (idRol, idPermiso) VALUES 
+--Cliente (en mi caso de id 8, cambiar si no coincide)
+(8,30), --comprar
+(8,38), --clientes
+(8,40), --agendamiento
+(8,40), --acceso
+--Colaborador (en mi caso 9)
+(9,36), --ventas
+(9,39), --horario
+(9,40), --agendamiento
+(9,41), --colaboradores
+(9,42), --acceso
+--Usuario (administrador pero por alguna razon se llama asi)
+(10,27),
+(10,28),
+(10,29),
+(10,30),
+(10,31),
+(10,32),
+(10,33),
+(10,34),
+(10,35),
+(10,36),
+(10,37),
+(10,38),
+(10,39),
+(10,40),
+(10,41),
+(10,42)
+
+
+--Insertar un dato en cada tabla (usuarios, clientes, colaboradores), el rol de pende de como se haya creado
+insert into alexa_soft.colaboradores (nombre, cedula, correo, telefono, contrasena, estado, fechaInteraccion, idRol) 
+VALUES 
+('Juana', '1472583695', 'juana@gmail.com', '3021012588', 'juanita', 'Desactivado', CURRENT_TIMESTAMP, 9)
+
+insert into alexa_soft.usuarios (nombre, instagram, correo, telefono, contrasena, estado, fechaInteraccion, idRol) 
+VALUES 
+('Tilin', 'eladmin', 'tilin@gmail.com', '3021014111', 'tilinDeidad', 'Activo', CURRENT_TIMESTAMP, 10)
+
+insert into alexa_soft.clientes(nombre, instagram, correo, telefono, contrasena, estado, fechaInteraccion, idRol) 
+VALUES 
+('Brilis', 'jBrilis', 'brilis@gmail.com', '3052364111', 'jesusbrilis', 'Activo', CURRENT_TIMESTAMP, 8)
