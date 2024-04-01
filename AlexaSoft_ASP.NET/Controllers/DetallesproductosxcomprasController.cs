@@ -1,30 +1,31 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AlexaSoft_ASP.NET.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AlexaSoft_ASP.NET.Controllers
 {
-    public class DetallesProductosXCompraController : Controller
+    public class DetallesproductosxcomprasController : Controller
     {
         private readonly AlexasoftContext _context;
 
-        public DetallesProductosXCompraController(AlexasoftContext context)
+        public DetallesproductosxcomprasController(AlexasoftContext context)
         {
             _context = context;
         }
 
-        // GET: DetallesProductosXCompra
+        // GET: Detallesproductosxcompras
         public async Task<IActionResult> Index()
         {
-            return _context.Detallesproductosxcompras != null ?
-                          View(await _context.Detallesproductosxcompras.ToListAsync()) :
-                          Problem("Entity set 'AlexasoftContext.Detallesproductosxcompras'  is null.");
+            var alexasoftContext = _context.Detallesproductosxcompras.Include(d => d.IdCompraNavigation).Include(d => d.IdProductoNavigation);
+            return View(await alexasoftContext.ToListAsync());
         }
 
-        // GET: DetallesProductosXCompra/Details/5
+        // GET: Detallesproductosxcompras/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Detallesproductosxcompras == null)
@@ -44,15 +45,17 @@ namespace AlexaSoft_ASP.NET.Controllers
             return View(detallesproductosxcompra);
         }
 
-        // GET: DetallesProductosXCompra/Create
+        // GET: Detallesproductosxcompras/Create
         public IActionResult Create()
         {
-            ViewData["IdCompra"] = new SelectList(_context.Compras, "IdCompra", "IdCompra");
+            ViewData["IdCompra"] = new SelectList(_context.Compras, "IdCompra", "Fecha");
             ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "Nombre");
             return View();
         }
 
-        // POST: DetallesProductosXCompra/Create
+        // POST: Detallesproductosxcompras/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdDetalleProductoXcompra,IdProducto,IdCompra,Unidades")] Detallesproductosxcompra detallesproductosxcompra)
@@ -61,14 +64,24 @@ namespace AlexaSoft_ASP.NET.Controllers
             {
                 _context.Add(detallesproductosxcompra);
                 await _context.SaveChangesAsync();
+
+                // Actualizar las unidades del producto correspondiente
+                var producto = await _context.Productos.FindAsync(detallesproductosxcompra.IdProducto);
+                if (producto != null)
+                {
+                    producto.Unidades += detallesproductosxcompra.Unidades;
+                    _context.Update(producto);
+                    await _context.SaveChangesAsync();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdCompra"] = new SelectList(_context.Compras, "IdCompra", "IdCompra", detallesproductosxcompra.IdCompra);
-            ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "Nombre", detallesproductosxcompra.IdProducto);
+            ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "IdProducto", detallesproductosxcompra.IdProducto);
             return View(detallesproductosxcompra);
         }
 
-        // GET: DetallesProductosXCompra/Edit/5
+        // GET: Detallesproductosxcompras/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Detallesproductosxcompras == null)
@@ -82,11 +95,13 @@ namespace AlexaSoft_ASP.NET.Controllers
                 return NotFound();
             }
             ViewData["IdCompra"] = new SelectList(_context.Compras, "IdCompra", "IdCompra", detallesproductosxcompra.IdCompra);
-            ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "Nombre", detallesproductosxcompra.IdProducto);
+            ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "IdProducto", detallesproductosxcompra.IdProducto);
             return View(detallesproductosxcompra);
         }
 
-        // POST: DetallesProductosXCompra/Edit/5
+        // POST: Detallesproductosxcompras/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdDetalleProductoXcompra,IdProducto,IdCompra,Unidades")] Detallesproductosxcompra detallesproductosxcompra)
@@ -117,11 +132,11 @@ namespace AlexaSoft_ASP.NET.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdCompra"] = new SelectList(_context.Compras, "IdCompra", "IdCompra", detallesproductosxcompra.IdCompra);
-            ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "Nombre", detallesproductosxcompra.IdProducto);
+            ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "IdProducto", detallesproductosxcompra.IdProducto);
             return View(detallesproductosxcompra);
         }
 
-        // GET: DetallesProductosXCompra/Delete/5
+        // GET: Detallesproductosxcompras/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Detallesproductosxcompras == null)
@@ -141,7 +156,7 @@ namespace AlexaSoft_ASP.NET.Controllers
             return View(detallesproductosxcompra);
         }
 
-        // POST: DetallesProductosXCompra/Delete/5
+        // POST: Detallesproductosxcompras/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -155,14 +170,14 @@ namespace AlexaSoft_ASP.NET.Controllers
             {
                 _context.Detallesproductosxcompras.Remove(detallesproductosxcompra);
             }
-
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool DetallesproductosxcompraExists(int id)
         {
-            return (_context.Detallesproductosxcompras?.Any(e => e.IdDetalleProductoXcompra == id)).GetValueOrDefault();
+          return (_context.Detallesproductosxcompras?.Any(e => e.IdDetalleProductoXcompra == id)).GetValueOrDefault();
         }
     }
 }

@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AlexaSoft_ASP.NET.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AlexaSoft_ASP.NET.Controllers
 {
@@ -20,9 +21,8 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Compras
         public async Task<IActionResult> Index()
         {
-            return _context.Compras != null ?
-                          View(await _context.Compras.ToListAsync()) :
-                          Problem("Entity set 'AlexasoftContext.Compras'  is null.");
+            var alexasoftContext = _context.Compras.Include(c => c.IdProveedorNavigation);
+            return View(await alexasoftContext.ToListAsync());
         }
 
         // GET: Compras/Details/5
@@ -34,7 +34,7 @@ namespace AlexaSoft_ASP.NET.Controllers
             }
 
             var compra = await _context.Compras
-                .Include(c => c.Detallesproductosxcompras)
+                .Include(c => c.IdProveedorNavigation)
                 .FirstOrDefaultAsync(m => m.IdCompra == id);
             if (compra == null)
             {
@@ -52,6 +52,8 @@ namespace AlexaSoft_ASP.NET.Controllers
         }
 
         // POST: Compras/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdCompra,IdProveedor,Precio,Fecha,Subtotal,MotivoAnular")] Compra compra)
@@ -62,7 +64,7 @@ namespace AlexaSoft_ASP.NET.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdProveedor"] = new SelectList(_context.Proveedores, "IdProveedor", "Nombre", compra.IdProveedor);
+            ViewData["IdProveedor"] = new SelectList(_context.Proveedores, "IdProveedor", "IdProveedor", compra.IdProveedor);
             return View(compra);
         }
 
@@ -79,11 +81,13 @@ namespace AlexaSoft_ASP.NET.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdProveedor"] = new SelectList(_context.Proveedores, "IdProveedor", "Nombre", compra.IdProveedor);
+            ViewData["IdProveedor"] = new SelectList(_context.Proveedores, "IdProveedor", "IdProveedor", compra.IdProveedor);
             return View(compra);
         }
 
         // POST: Compras/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdCompra,IdProveedor,Precio,Fecha,Subtotal,MotivoAnular")] Compra compra)
@@ -113,7 +117,7 @@ namespace AlexaSoft_ASP.NET.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdProveedor"] = new SelectList(_context.Proveedores, "IdProveedor", "Nombre", compra.IdProveedor);
+            ViewData["IdProveedor"] = new SelectList(_context.Proveedores, "IdProveedor", "IdProveedor", compra.IdProveedor);
             return View(compra);
         }
 
@@ -150,14 +154,14 @@ namespace AlexaSoft_ASP.NET.Controllers
             {
                 _context.Compras.Remove(compra);
             }
-
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CompraExists(int id)
         {
-            return (_context.Compras?.Any(e => e.IdCompra == id)).GetValueOrDefault();
+          return (_context.Compras?.Any(e => e.IdCompra == id)).GetValueOrDefault();
         }
     }
 }

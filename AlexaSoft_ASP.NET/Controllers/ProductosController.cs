@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AlexaSoft_ASP.NET.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AlexaSoft_ASP.NET.Controllers
 {
@@ -19,9 +21,8 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Productos
         public async Task<IActionResult> Index()
         {
-            return _context.Productos != null ?
-                          View(await _context.Productos.ToListAsync()) :
-                          Problem("Entity set 'AlexasoftContext.Productos'  is null.");
+            var alexasoftContext = _context.Productos.Include(p => p.IdCategoriaProductoNavigation);
+            return View(await alexasoftContext.ToListAsync());
         }
 
         // GET: Productos/Details/5
@@ -51,6 +52,8 @@ namespace AlexaSoft_ASP.NET.Controllers
         }
 
         // POST: Productos/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdProducto,Nombre,Marca,Precio,Unidades,Estado,IdCategoriaProducto")] Producto producto)
@@ -61,7 +64,7 @@ namespace AlexaSoft_ASP.NET.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdCategoriaProducto"] = new SelectList(_context.CategoriaProductos, "IdCategoriaProducto", "Nombre", producto.IdCategoriaProducto);
+            ViewData["IdCategoriaProducto"] = new SelectList(_context.CategoriaProductos, "IdCategoriaProducto", "IdCategoriaProducto", producto.IdCategoriaProducto);
             return View(producto);
         }
 
@@ -78,11 +81,13 @@ namespace AlexaSoft_ASP.NET.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdCategoriaProducto"] = new SelectList(_context.CategoriaProductos, "IdCategoriaProducto", "Nombre", producto.IdCategoriaProducto);
+            ViewData["IdCategoriaProducto"] = new SelectList(_context.CategoriaProductos, "IdCategoriaProducto", "IdCategoriaProducto", producto.IdCategoriaProducto);
             return View(producto);
         }
 
         // POST: Productos/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdProducto,Nombre,Marca,Precio,Unidades,Estado,IdCategoriaProducto")] Producto producto)
@@ -112,7 +117,7 @@ namespace AlexaSoft_ASP.NET.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdCategoriaProducto"] = new SelectList(_context.CategoriaProductos, "IdCategoriaProducto", "Nombre", producto.IdCategoriaProducto);
+            ViewData["IdCategoriaProducto"] = new SelectList(_context.CategoriaProductos, "IdCategoriaProducto", "IdCategoriaProducto", producto.IdCategoriaProducto);
             return View(producto);
         }
 
@@ -149,14 +154,14 @@ namespace AlexaSoft_ASP.NET.Controllers
             {
                 _context.Productos.Remove(producto);
             }
-
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ProductoExists(int id)
         {
-            return (_context.Productos?.Any(e => e.IdProducto == id)).GetValueOrDefault();
+          return (_context.Productos?.Any(e => e.IdProducto == id)).GetValueOrDefault();
         }
     }
 }

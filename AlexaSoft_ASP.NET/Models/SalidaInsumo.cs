@@ -15,5 +15,5 @@ public partial class SalidaInsumo
 
     public string? MotivoAnular { get; set; }
 
-    public virtual Producto IdProductoNavigation { get; set; } = null!;
+    public virtual Producto? IdProductoNavigation { get; set; } 
 }

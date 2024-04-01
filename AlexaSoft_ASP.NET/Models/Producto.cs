@@ -23,7 +23,7 @@ public partial class Producto
 
     public virtual ICollection<Detallesproductosxcompra> Detallesproductosxcompras { get; set; } = new List<Detallesproductosxcompra>();
 
-    public virtual CategoriaProducto IdCategoriaProductoNavigation { get; set; } = null!;
+    public virtual CategoriaProducto? IdCategoriaProductoNavigation { get; set; }
 
     public virtual ICollection<SalidaInsumo> SalidaInsumos { get; set; } = new List<SalidaInsumo>();
 

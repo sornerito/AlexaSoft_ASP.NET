@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AlexaSoft_ASP.NET.Models;
 
@@ -18,7 +21,7 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: CategoriaProductos
         public async Task<IActionResult> Index()
         {
-            return _context.CategoriaProductos != null ?
+              return _context.CategoriaProductos != null ? 
                           View(await _context.CategoriaProductos.ToListAsync()) :
                           Problem("Entity set 'AlexasoftContext.CategoriaProductos'  is null.");
         }
@@ -146,14 +149,14 @@ namespace AlexaSoft_ASP.NET.Controllers
             {
                 _context.CategoriaProductos.Remove(categoriaProducto);
             }
-
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CategoriaProductoExists(int id)
         {
-            return (_context.CategoriaProductos?.Any(e => e.IdCategoriaProducto == id)).GetValueOrDefault();
+          return (_context.CategoriaProductos?.Any(e => e.IdCategoriaProducto == id)).GetValueOrDefault();
         }
     }
 }

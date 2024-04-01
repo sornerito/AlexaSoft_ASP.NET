@@ -13,7 +13,7 @@ public partial class Detallesproductosxcompra
 
     public int Unidades { get; set; }
 
-    public virtual Compra IdCompraNavigation { get; set; } = null!;
+    public virtual Compra? IdCompraNavigation { get; set; } 
 
-    public virtual Producto IdProductoNavigation { get; set; } = null!;
+    public virtual Producto? IdProductoNavigation { get; set; }
 }

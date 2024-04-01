@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AlexaSoft_ASP.NET.Models;
 
@@ -18,7 +21,7 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Proveedores
         public async Task<IActionResult> Index()
         {
-            return _context.Proveedores != null ?
+              return _context.Proveedores != null ? 
                           View(await _context.Proveedores.ToListAsync()) :
                           Problem("Entity set 'AlexasoftContext.Proveedores'  is null.");
         }
@@ -31,14 +34,14 @@ namespace AlexaSoft_ASP.NET.Controllers
                 return NotFound();
             }
 
-            var proveedor = await _context.Proveedores
+            var proveedore = await _context.Proveedores
                 .FirstOrDefaultAsync(m => m.IdProveedor == id);
-            if (proveedor == null)
+            if (proveedore == null)
             {
                 return NotFound();
             }
 
-            return View(proveedor);
+            return View(proveedore);
         }
 
         // GET: Proveedores/Create
@@ -48,6 +51,8 @@ namespace AlexaSoft_ASP.NET.Controllers
         }
 
         // POST: Proveedores/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdProveedor,Nombre,Descripcion,Telefono")] Proveedore proveedore)
@@ -69,15 +74,17 @@ namespace AlexaSoft_ASP.NET.Controllers
                 return NotFound();
             }
 
-            var proveedor = await _context.Proveedores.FindAsync(id);
-            if (proveedor == null)
+            var proveedore = await _context.Proveedores.FindAsync(id);
+            if (proveedore == null)
             {
                 return NotFound();
             }
-            return View(proveedor);
+            return View(proveedore);
         }
 
         // POST: Proveedores/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdProveedor,Nombre,Descripcion,Telefono")] Proveedore proveedore)
@@ -96,7 +103,7 @@ namespace AlexaSoft_ASP.NET.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProveedorExists(proveedore.IdProveedor))
+                    if (!ProveedoreExists(proveedore.IdProveedor))
                     {
                         return NotFound();
                     }
@@ -118,14 +125,14 @@ namespace AlexaSoft_ASP.NET.Controllers
                 return NotFound();
             }
 
-            var proveedor = await _context.Proveedores
+            var proveedore = await _context.Proveedores
                 .FirstOrDefaultAsync(m => m.IdProveedor == id);
-            if (proveedor == null)
+            if (proveedore == null)
             {
                 return NotFound();
             }
 
-            return View(proveedor);
+            return View(proveedore);
         }
 
         // POST: Proveedores/Delete/5
@@ -137,19 +144,19 @@ namespace AlexaSoft_ASP.NET.Controllers
             {
                 return Problem("Entity set 'AlexasoftContext.Proveedores'  is null.");
             }
-            var proveedor = await _context.Proveedores.FindAsync(id);
-            if (proveedor != null)
+            var proveedore = await _context.Proveedores.FindAsync(id);
+            if (proveedore != null)
             {
-                _context.Proveedores.Remove(proveedor);
+                _context.Proveedores.Remove(proveedore);
             }
-
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProveedorExists(int id)
+        private bool ProveedoreExists(int id)
         {
-            return (_context.Proveedores?.Any(e => e.IdProveedor == id)).GetValueOrDefault();
+          return (_context.Proveedores?.Any(e => e.IdProveedor == id)).GetValueOrDefault();
         }
     }
 }
