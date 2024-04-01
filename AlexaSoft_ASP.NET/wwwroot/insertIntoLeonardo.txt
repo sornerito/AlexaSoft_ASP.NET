@@ -5,6 +5,10 @@ INSERT INTO alexa_soft.roles (nombre, estado) VALUES ('Usuario', 'Activo'), ('Cl
 --cambiar tipo de dato del campo descripcion
 alter table alexa_soft.permisos alter column descripcion nvarchar(200)
 
+--permitir que el instagram sea opcional
+ALTER TABLE alexa_soft.clientes
+ALTER COLUMN instagram nvarchar(30) NULL;
+
 --meter datos a permisos
 INSERT INTO alexa_soft.permisos (nombre, descripcion) VALUES
 ('Gestionar Roles', 'El usuario podra gestionar los roles del aplicativo'),
@@ -57,3 +61,15 @@ INSERT INTO alexa_soft.roles_permisos (idRol, idPermiso) VALUES
 (10,42)
 
 
+--Insertar un dato en cada tabla (usuarios, clientes, colaboradores), el rol de pende de como se haya creado
+insert into alexa_soft.colaboradores (nombre, cedula, correo, telefono, contrasena, estado, fechaInteraccion, idRol) 
+VALUES 
+('Juana', '1472583695', 'juana@gmail.com', '3021012588', 'juanita', 'Desactivado', CURRENT_TIMESTAMP, 9)
+
+insert into alexa_soft.usuarios (nombre, instagram, correo, telefono, contrasena, estado, fechaInteraccion, idRol) 
+VALUES 
+('Tilin', 'eladmin', 'tilin@gmail.com', '3021014111', 'tilinDeidad', 'Activo', CURRENT_TIMESTAMP, 10)
+
+insert into alexa_soft.clientes(nombre, instagram, correo, telefono, contrasena, estado, fechaInteraccion, idRol) 
+VALUES 
+('Brilis', 'jBrilis', 'brilis@gmail.com', '3052364111', 'jesusbrilis', 'Activo', CURRENT_TIMESTAMP, 8)

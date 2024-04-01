@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AlexaSoft_ASP.NET.Models;
+using AlexaSoft_ASP.NET.Utilities;
 
 namespace AlexaSoft_ASP.NET.Controllers
 {
@@ -21,6 +22,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Roles
         public async Task<IActionResult> Index()
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Roles"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             var rolesConPermisos = _context.Roles
             .Include(r => r.RolesPermisos)
                 .ThenInclude(rp => rp.IdPermisoNavigation) 
@@ -34,6 +39,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Roles/Create
         public IActionResult Create()
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Roles"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             var permisos = _context.Permisos.ToList();
             ViewBag.Permisos = permisos;
             return View();
@@ -42,8 +51,12 @@ namespace AlexaSoft_ASP.NET.Controllers
         // POST: Roles/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Role role, int[] permisos)
+        public async Task<IActionResult> Create(Role role, double[] permisos)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Roles"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (ModelState.IsValid)
             {
                 _context.Roles.Add(role);
@@ -54,7 +67,7 @@ namespace AlexaSoft_ASP.NET.Controllers
 
                     RolesPermiso rolesPermiso = new RolesPermiso
                     {
-                        IdRol = role.IdRol,
+                        IdRol = role.IdRol,              
                         IdPermiso = permisoId
                     };
 
@@ -70,7 +83,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Roles/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Roles"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             var rol = await _context.Roles
             .Include(r => r.RolesPermisos)
             .ThenInclude(rp => rp.IdPermisoNavigation) 
@@ -89,6 +105,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdRol,Nombre,Estado")] Role role, int[] permisos)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Roles"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (ModelState.IsValid)
             {
                 try
@@ -150,6 +170,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [HttpPost]
         public async Task<IActionResult> CambiarEstado(int idRol)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Roles"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             var rol = await _context.Roles.FindAsync(idRol);
             if (rol == null)
             {

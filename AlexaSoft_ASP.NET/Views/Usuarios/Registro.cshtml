@@ -1,0 +1,143 @@
+﻿@model AlexaSoft_ASP.NET.Models.Usuario
+
+@{
+    ViewData["Title"] = "¡Registrate!";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container bordeVino">
+    <br>
+    <div class="row">
+        <div class="col-3">
+            <div onclick="volver()" class="text-center">
+                <i class="fa fa-angle-left fa-3x clickeable"></i>
+            </div>
+        </div>
+        <div class="col-6">
+            <h1 class="text-center">Crear Cuenta</h1>
+        </div>
+        <div class="col-3"></div>
+    </div> <!--Fin Row-->
+    <br><br>
+
+    <form id="formularioRegistro" class="mx-5" asp-action="Registro" method="post">
+        <!--Inicio Formulario-->
+
+        <div class="row">
+            <div class="col-6">
+                <div class=" form-group">
+                    <label asp-for="Nombre" class="fs-5 col-form-label control-label">Nombre:</label>
+                        <input asp-for="Nombre" type="text" class=" fs-5 form-control" name="nombre" id="nombre" placeholder="Nombre Completo">
+                        <span asp-validation-for="Nombre"></span>
+                   
+                </div><!--Fin Row-->
+            </div>
+			<div class="col-6">
+				<div class=" form-group">
+                    <label asp-for="Instagram" class="fs-5  col-form-label control-label">Instagram:</label>
+                    <input asp-for="Instagram" type="text" class="fs-5 form-control" name="instagram" id="instagram"
+							   placeholder="Instagram (Recomendado)">
+					
+				</div><!--Fin Row-->
+			</div>
+        </div><!--Fin Row-->
+
+        <div class="row">
+            <div class="col-6">
+                <div class=" form-group">
+                    <label asp-for="Correo" class="fs-5  col-form-label control-label">Correo:</label>
+                    <input asp-for="Correo" type="email" class=" fs-5 form-control" name="correo" id="correo" placeholder="Correo">
+                    <span asp-validation-for="Correo"></span>
+                </div><!--Fin Row-->
+            </div>
+            <div class="col-6">
+                <div class=" form-group">
+                    <label asp-for="Contrasena" class="fs-5  col-form-label control-label">Contraseña:</label>
+                    <input asp-for="Contrasena" type="password" class="fs-5 form-control" name="contrasena" id="contrasena"
+                               placeholder="Contraseña">
+                    <span asp-validation-for="Contrasena"></span>
+                    
+                </div><!--Fin Row-->
+            </div>
+        </div><!--Fin Row-->
+
+        <div class="row">
+            <div class="col-6">
+                <div class=" form-group">
+                    <label asp-for="Telefono" class="fs-5  col-form-label control-label">Telefono:</label>
+                    <input asp-for="Telefono" type="number" class=" fs-5 form-control" name="telefono" id="telefono" placeholder="Telefono">
+                    <span asp-validation-for="Telefono"></span>
+                </div><!--Fin Row-->
+            </div>
+            <div class="col-6">
+                <div class=" form-group">
+                    <label class="fs-5  col-form-label control-label">Confirmar Contraseña:</label>
+                    <input type="password" class="fs-5 form-control" name="ConfirmarContrasena" id="ConfirmarContrasena"
+                           placeholder="ConfirmarContrasena">
+                    
+                </div><!--Fin Row-->
+            </div>
+            
+        </div><!--Fin Row-->
+
+        <br>
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-6 text-center">
+                <a id="botonCrearCuenta" class="btn btn-lg fondoVino text-light">
+                    Crear
+                    cuenta
+                </a>
+            </div>
+            <div class="col-3"></div>
+        </div> <!--Fin Row-->
+    </form><!--Fin Formulario-->
+    <br>
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <p class="fs-6 text-center">¿Ya tienes una cuenta? <a asp-action="Login">Inicia sesión</a></p>
+        </div>
+        <div class="col-3"></div>
+    </div> <!--Fin Row-->
+    <br><br>
+</div> <!--Fin Container-->
+
+
+<script>
+
+    /*Validar formulario*/
+    
+    //Enviar Formulario
+    document.getElementById("botonCrearCuenta").addEventListener("click", async (e) => {
+        e.preventDefault();
+        let nombre = document.getElementById("nombre").value;
+        let correo = document.getElementById("correo").value;
+        let telefono = document.getElementById("telefono").value;
+        let contrasena = document.getElementById("contrasena").value;
+        let ConfirmarContrasena = document.getElementById("ConfirmarContrasena").value;
+        if (nombre && correo && telefono && contrasena && ConfirmarContrasena) {
+            debugger;
+            document.getElementById("formularioRegistro").submit()
+        } else {
+            await Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "Revisa que los campos no esten vacios"
+            })
+        }
+    });
+
+    //Funcion volver
+    function volver() {
+        window.history.back();
+    }
+
+</script>
+
+@Html.Raw(ViewData["CorreoYaRegistrado"])
+@Html.Raw(ViewData["TelefonoYaRegistrado"])
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
