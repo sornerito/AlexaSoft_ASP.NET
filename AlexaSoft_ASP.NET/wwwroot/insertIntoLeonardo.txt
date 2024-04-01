@@ -35,7 +35,7 @@ INSERT INTO alexa_soft.roles_permisos (idRol, idPermiso) VALUES
 (8,30), --comprar
 (8,38), --clientes
 (8,40), --agendamiento
-(8,40), --acceso
+(8,42), --acceso
 --Colaborador (en mi caso 9)
 (9,36), --ventas
 (9,39), --horario
