@@ -19,7 +19,21 @@
 
 </head>
 <body>
- 
+    @{
+
+        var permisosJson = HttpContextAccessor.HttpContext.Session.GetString("Permisos");
+        List<dynamic> permisos = new List<dynamic>();
+
+        if (!string.IsNullOrEmpty(permisosJson))
+        {
+            permisos = JsonConvert.DeserializeObject<List<dynamic>>(permisosJson);
+        }
+
+        bool TienePermiso(string permisoRequerido)
+        {
+            return permisos.Any(p => p.Nombre == permisoRequerido);
+        }
+    }
 
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -80,6 +94,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Login">Inicia Sesión</a>
                             </li>
                         }
+
 
                     </ul>
                 </div>
