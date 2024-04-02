@@ -5,11 +5,23 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="container">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <h1 class="text-center">Productos</h1>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="col-4">
+        <a class="btn btn-primary" asp-action="Create">Nueva Productos</a>
+    </div>
+</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -56,9 +68,9 @@
                 @Html.DisplayFor(modelItem => item.IdCategoriaProductoNavigation.IdCategoriaProducto)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.IdProducto">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdProducto">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdProducto">Delete</a>
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.IdProducto">Edit</a> |
+                <a class="btn btn-success" asp-action="Details" asp-route-id="@item.IdProducto">Details</a> |
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.IdProducto">Delete</a>
             </td>
         </tr>
 }

@@ -33,14 +33,19 @@
                 <span asp-validation-for="MotivoAnular" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label id="idDetalles" class="control-label">idDetalles</label>
+                <input id="idDetalles" name="idDetalles" class="form-control" />
+            </div>
+            <div class="form-group">
                 <label id="IdProductos" class="control-label"></label>
                 <select id="idProducto" name="idProducto" class="form-control" asp-items="ViewBag.IdProducto"></select>
             </div>
             <div class="form-group">
                 <label id="Unidades" class="control-label">Unidades</label>
-                <input id="Unidades" class="form-control" />
+                <input id="Unidades" name="Unidades" class="form-control" />
             </div>
             <div class="form-group">
+                <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
                 <input type="submit" value="Create" class="btn btn-primary" />  
             </div>
             
@@ -49,16 +54,6 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-<script>
-    $(document).ready(function() {
-        $("#IdProductos").change(function() {
-            var selectedProductId = $(this).val();
-            $("#IdProducto").val(selectedProductId);
-        });
-    });
-</script>
+
 
 

@@ -4,12 +4,23 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<div class="container">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <h1 class="text-center">Categoria Productos</h1>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
 
-<h1>Index</h1>
+<div class="container">
+    <div class="col-4">
+        <a class="btn btn-primary" asp-action="Create">Nueva Categoria</a>
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
@@ -26,11 +37,11 @@
                 @Html.DisplayFor(modelItem => item.Nombre)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.IdCategoriaProducto">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdCategoriaProducto">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdCategoriaProducto">Delete</a>
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.IdCategoriaProducto">Edit</a> |
+                <a class="btn btn-success" asp-action="Details" asp-route-id="@item.IdCategoriaProducto">Details</a> |
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.IdCategoriaProducto">Delete</a>
             </td>
         </tr>
-}
+}   
     </tbody>
 </table>

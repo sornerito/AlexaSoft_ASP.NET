@@ -60,21 +60,35 @@ namespace AlexaSoft_ASP.NET.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdCompra,IdProveedor,Precio,Fecha,Subtotal,MotivoAnular")] Compra compra, int idProducto, int Unidades)
+        public async Task<IActionResult> Create([Bind("IdCompra,IdProveedor,Precio,Fecha,Subtotal,MotivoAnular")] Compra compra, int idProducto, int Unidades, int idDetalles)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(compra);
-                await _context.SaveChangesAsync();
-                Detallesproductosxcompra detallesproductosxcompra = new Detallesproductosxcompra
-                {
-                    IdCompra = compra.IdCompra,
-                    IdProducto = idProducto,
-                    Unidades = Unidades
-                };
+                int compraSaved = await _context.SaveChangesAsync();
 
-                _context.Detallesproductosxcompras.Add(detallesproductosxcompra);
-                _context.SaveChanges();
+                if (compraSaved > 0)
+                {
+                    Detallesproductosxcompra detallesproductosxcompra = new Detallesproductosxcompra
+                    {
+                        IdDetalleProductoXcompra = idDetalles,
+                        IdCompra = compra.IdCompra,
+                        IdProducto = idProducto,
+                        Unidades = Unidades
+                    };
+
+                    _context.Detallesproductosxcompras.Add(detallesproductosxcompra);
+                    await _context.SaveChangesAsync();
+                }
+                var producto = await _context.Productos.FindAsync(idProducto);
+                if (producto != null)
+                {
+                    producto.Unidades += Unidades;
+                    _context.Productos.Update(producto);
+                    await _context.SaveChangesAsync();
+                }
+
+
                 return RedirectToAction(nameof(Index));
 
             }
