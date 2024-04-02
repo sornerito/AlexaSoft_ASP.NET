@@ -5,10 +5,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Delete</h1>
+<h1>Eliminar Productos</h1>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
+<h3>Estas seguro de Eliminar este registro?</h3>
+
+<div class="container bordeVino px-4">
     <h4>Producto</h4>
     <hr />
     <dl class="row">
@@ -49,10 +50,10 @@
             @Html.DisplayFor(model => model.IdCategoriaProductoNavigation.IdCategoriaProducto)
         </dd>
     </dl>
-    
+    <hr />
     <form asp-action="Delete">
         <input type="hidden" asp-for="IdProducto" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a class="btn btn-secondary" asp-action="Index">Cancelar</a> |
+        <input type="submit" value="Delete" class="btn btn-danger" />
     </form>
 </div>

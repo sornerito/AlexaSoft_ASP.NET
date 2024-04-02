@@ -5,10 +5,26 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
 
-<div>
-    <h4>Compra</h4>
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <div onclick="volver()" class="text-center">
+                <i class="fa fa-angle-left fa-3x clickeable"></i>
+            </div>
+        </div>
+        <div class="col-6">
+            <h1 class="text-center">Detalle Compra</h1>
+        </div>
+        <div class="col-3">
+        </div>
+    </div> <!--Fin Row-->
+</div>
+<hr />
+
+<div class="container bordeVino px-4">
+   
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -42,8 +58,13 @@
             @Html.DisplayFor(model => model.IdProveedorNavigation.IdProveedor)
         </dd>
     </dl>
+    <hr />
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.IdCompra">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+<script>
+    //Funcion Volver
+    function volver() {
+        window.history.back();
+    }
+</script>
+

@@ -4,13 +4,21 @@
     ViewData["Title"] = "Delete";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+}<div class="container">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <h1 class="text-center">Categoria Productos</h1>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
+<h3>Estas seguro de Eliminar este registro?</h3>
 
-<h1>Delete</h1>
-
-<h3>Are you sure you want to delete this?</h3>
-<div>
+<div class="container bordeVino px-4">
     <h4>CategoriaProducto</h4>
-    <hr />
+
+<hr /> 
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Nombre)
@@ -19,10 +27,11 @@
             @Html.DisplayFor(model => model.Nombre)
         </dd>
     </dl>
+    <hr />
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="IdCategoriaProducto" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a class="btn btn-secondary" asp-action="Index">Cancelar</a> |
+        <input type="submit" value="Delete" class="btn btn-danger" /> 
     </form>
 </div>

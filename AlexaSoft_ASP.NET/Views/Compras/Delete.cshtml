@@ -4,12 +4,19 @@
     ViewData["Title"] = "Delete";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<div class="container">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <h1 class="text-center">Compras</h1>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
+<h3>Estas seguro de Eliminar este registro?</h3>
 
-<h1>Delete</h1>
-
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Compra</h4>
+<div class="container bordeVino px-4">
+    <h4>Eliminar compras</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -43,10 +50,10 @@
             @Html.DisplayFor(model => model.IdProveedorNavigation.IdProveedor)
         </dd>
     </dl>
-    
+    <hr />
     <form asp-action="Delete">
         <input type="hidden" asp-for="IdCompra" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a class="btn btn-secondary" asp-action="Index">Cancelar</a> |
+        <input class="btn btn-danger" type="submit" value="Delete" />
     </form>
 </div>
