@@ -69,9 +69,11 @@ namespace AlexaSoft_ASP.NET.Controllers
 
                 if (compraSaved > 0)
                 {
+                    int i = Guid.NewGuid().GetHashCode();
+
                     Detallesproductosxcompra detallesproductosxcompra = new Detallesproductosxcompra
                     {
-                        IdDetalleProductoXcompra = idDetalles,
+                        IdDetalleProductoXcompra = i,
                         IdCompra = compra.IdCompra,
                         IdProducto = idProducto,
                         Unidades = Unidades
