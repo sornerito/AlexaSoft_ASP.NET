@@ -269,7 +269,7 @@ namespace AlexaSoft_ASP.NET.Controllers
                 Contrasena = usuario.Contrasena,
                 Estado = "Activo",
                 FechaInteraccion = DateTime.Now,
-                IdRol = 8
+                IdRol = 2
             };
 
             // Agregar el nuevo cliente a la tabla Clientes

@@ -12,11 +12,8 @@
     <link rel="stylesheet" href="~/AlexaSoft_ASP.NET.styles.css" asp-append-version="true" />
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.7/dist/sweetalert2.all.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.7/dist/sweetalert2.min.css">
-
-
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.7/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.7/dist/sweetalert2.min.css">
 </head>
 <body>
     @{
@@ -34,8 +31,8 @@
             return permisos.Any(p => p.Nombre == permisoRequerido);
         }
     }
-
-    <header>
+    <div class="dropdown-container">
+        <header></header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AlexaSoft_ASP.NET</a>
@@ -53,30 +50,44 @@
                             <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">Roles</a>
                         </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">Roles</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="CategoriaProductos" asp-action="Index">CategoriaProductos</a>
-                        </li>
-                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Compras" asp-action="Index">Compras</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Detallesproductosxcompras" asp-action="Index">Detallesproductoxcompras</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Productos" asp-action="Index">Producto</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Proveedores" asp-action="Index">Proveedores</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="SalidaInsumos" asp-action="Index">SalidaInsumos</a>
-                        </li>
-
                         }
+
+                        @if (!string.IsNullOrEmpty(permisosJson) && TienePermiso("Gestionar Ventas"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Ventas" asp-action="Index">Ventas</a>
+                            </li>
+                        }
+                        @if (!string.IsNullOrEmpty(permisosJson) && TienePermiso("Gestionar Categoria de Productos"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="CategoriaProductos" asp-action="Index">CategoriaProductos</a>
+                            </li>
+                        }
+                        @if (!string.IsNullOrEmpty(permisosJson) && TienePermiso("Gestionar Compras"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Compras" asp-action="Index">Compras</a>
+                            </li>
+                        }
+                        @if (!string.IsNullOrEmpty(permisosJson) && TienePermiso("Gestionar Productos"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Productos" asp-action="Index">Producto</a>
+                            </li>
+                        }
+                        @if (!string.IsNullOrEmpty(permisosJson) && TienePermiso("Gestionar Proveedores"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Proveedores" asp-action="Index">Proveedores</a>
+                            </li>
+                        }
+                        @if (!string.IsNullOrEmpty(permisosJson) && TienePermiso("Gestionar Insumos"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="SalidaInsumos" asp-action="Index">SalidaInsumos</a>
+                            </li>
+                        }  
             
                         @if (!string.IsNullOrEmpty(permisosJson))
                         {
@@ -95,31 +106,11 @@
                             </li>
                         }
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="CategoriaProductos" asp-action="Index">CategoriaProductos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Compras" asp-action="Index">Compras</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Detallesproductosxcompras" asp-action="Index">Detallesproductoxcompras</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Productos" asp-action="Index">Producto</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Proveedores" asp-action="Index">Proveedores</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="SalidaInsumos" asp-action="Index">SalidaInsumos</a>
-                        </li>
-
 
                     </ul>
                 </div>
             </div>
         </nav>
-    </header>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
