@@ -117,14 +117,22 @@
         let contrasena = document.getElementById("contrasena").value;
         let ConfirmarContrasena = document.getElementById("ConfirmarContrasena").value;
         if (nombre && correo && telefono && contrasena && ConfirmarContrasena) {
-            debugger;
-            document.getElementById("formularioRegistro").submit()
+            if (contrasena != ConfirmarContrasena) {
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "Las contraseñas no coinciden"
+                });
+            } else {
+                document.getElementById("formularioRegistro").submit();
+            }
+            
         } else {
             await Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
                 text: "Revisa que los campos no esten vacios"
-            })
+            });
         }
     });
 
@@ -134,9 +142,10 @@
     }
 
 </script>
-
+@Html.Raw(ViewData["CorreoNoValido"])
 @Html.Raw(ViewData["CorreoYaRegistrado"])
 @Html.Raw(ViewData["TelefonoYaRegistrado"])
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

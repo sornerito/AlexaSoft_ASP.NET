@@ -5,6 +5,8 @@ INSERT INTO alexa_soft.roles (nombre, estado) VALUES ('Usuario', 'Activo'), ('Cl
 --cambiar tipo de dato del campo descripcion
 alter table alexa_soft.permisos alter column descripcion nvarchar(200)
 
+--ELIMINAR UNIQUE KEY EN LA TABLA CLIENTES, Y POSIBLEMENTE USUARIO
+
 --permitir que el instagram sea opcional
 ALTER TABLE alexa_soft.clientes
 ALTER COLUMN instagram nvarchar(30) NULL;
