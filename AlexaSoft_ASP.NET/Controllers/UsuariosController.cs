@@ -24,6 +24,22 @@ namespace AlexaSoft_ASP.NET.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
+        static bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                string[] validDomains = { ".com", ".co", ".net", ".org", ".edu", ".gov" };
+                bool isValidDomain = validDomains.Any(domain => addr.Host.EndsWith(domain));
+
+                return addr.Address == email && isValidDomain;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         // GET: Usuarios
         public async Task<IActionResult> Index()
         {
@@ -42,7 +58,22 @@ namespace AlexaSoft_ASP.NET.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(Usuario usuario)
         {
-            bool correoEnCliente = _context.Clientes.Any(cl => cl.Correo == usuario.Correo);
+			if (!IsValidEmail(usuario.Correo))
+			{
+				ModelState.AddModelError("Correo", "El correo no es valido.");
+				string script = @"
+                <script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'El correo no es valido.'
+                    });
+                </script>";
+				ViewData["CorreoNoValido"] = script;
+				return View(usuario);
+			}
+
+			bool correoEnCliente = _context.Clientes.Any(cl => cl.Correo == usuario.Correo);
             bool correoEnUsuario = _context.Usuarios.Any(cl => cl.Correo == usuario.Correo);
             bool correoEnColaboradores = _context.Colaboradores.Any(cl => cl.Correo == usuario.Correo);
 
@@ -168,11 +199,28 @@ namespace AlexaSoft_ASP.NET.Controllers
             return View();
         }
 
+        
+
         // POST: Usuarios/Registro
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Registro([Bind("IdUsuario,Nombre,Correo,Telefono,Instagram,Contrasena,Estado,FechaInteraccion,IdRol")] Usuario usuario)
         {
+            if (!IsValidEmail(usuario.Correo))
+            {
+                ModelState.AddModelError("Correo", "El correo no es valido.");
+                string script = @"
+                <script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'El correo no es valido.'
+                    });
+                </script>";
+                ViewData["CorreoNoValido"] = script;
+                return View(usuario);
+            }
+
             bool correoExistenteUsuarios = _context.Usuarios.Any(u => u.Correo == usuario.Correo);
             bool correoExistenteColaboradores = _context.Colaboradores.Any(c => c.Correo == usuario.Correo);
             bool correoExistenteClientes = _context.Clientes.Any(cl => cl.Correo == usuario.Correo);
@@ -221,7 +269,7 @@ namespace AlexaSoft_ASP.NET.Controllers
                 Contrasena = usuario.Contrasena,
                 Estado = "Activo",
                 FechaInteraccion = DateTime.Now,
-                IdRol = 8
+                IdRol = 2
             };
 
             // Agregar el nuevo cliente a la tabla Clientes

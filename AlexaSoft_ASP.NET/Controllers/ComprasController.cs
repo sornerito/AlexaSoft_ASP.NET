@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AlexaSoft_ASP.NET.Models;
+using System.Data;
 
 namespace AlexaSoft_ASP.NET.Controllers
 {
@@ -46,8 +47,11 @@ namespace AlexaSoft_ASP.NET.Controllers
 
         // GET: Compras/Create
         public IActionResult Create()
+
         {
             ViewData["IdProveedor"] = new SelectList(_context.Proveedores, "IdProveedor", "Nombre");
+            ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "Nombre");
+
             return View();
         }
 
@@ -56,15 +60,44 @@ namespace AlexaSoft_ASP.NET.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdCompra,IdProveedor,Precio,Fecha,Subtotal,MotivoAnular")] Compra compra)
+        public async Task<IActionResult> Create([Bind("IdCompra,IdProveedor,Precio,Fecha,Subtotal,MotivoAnular")] Compra compra, int idProducto, int Unidades, int idDetalles)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(compra);
-                await _context.SaveChangesAsync();
+                int compraSaved = await _context.SaveChangesAsync();
+
+                if (compraSaved > 0)
+                {
+                    int i = Guid.NewGuid().GetHashCode();
+
+                    Detallesproductosxcompra detallesproductosxcompra = new Detallesproductosxcompra
+                    {
+                        IdDetalleProductoXcompra = i,
+                        IdCompra = compra.IdCompra,
+                        IdProducto = idProducto,
+                        Unidades = Unidades
+                    };
+
+                    _context.Detallesproductosxcompras.Add(detallesproductosxcompra);
+                    await _context.SaveChangesAsync();
+                }
+                var producto = await _context.Productos.FindAsync(idProducto);
+                if (producto != null)
+                {
+                    producto.Unidades += Unidades;
+                    _context.Productos.Update(producto);
+                    await _context.SaveChangesAsync();
+                }
+
+
                 return RedirectToAction(nameof(Index));
+
             }
             ViewData["IdProveedor"] = new SelectList(_context.Proveedores, "IdProveedor", "IdProveedor", compra.IdProveedor);
+
+
+
             return View(compra);
         }
 
