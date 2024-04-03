@@ -51,11 +51,16 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">Roles</a>
                         </li>
                         }
-
                         @if (!string.IsNullOrEmpty(permisosJson) && TienePermiso("Gestionar Ventas"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Ventas" asp-action="Index">Ventas</a>
+                            </li>
+                        }
+                        @if (!string.IsNullOrEmpty(permisosJson) && TienePermiso("Gestionar Pedidos"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Pedidos" asp-action="Index">Pedidos</a>
                             </li>
                         }
                         @if (!string.IsNullOrEmpty(permisosJson) && TienePermiso("Gestionar Categoria de Productos"))
@@ -106,36 +111,6 @@
                             </li>
 
                         }
-                       
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Ventas" asp-action="Index">Ventas</a>
-                            </li>
-                        
-                        
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="CategoriaProductos" asp-action="Index">CategoriaProductos</a>
-                            </li>
-                        
-                        
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Compras" asp-action="Index">Compras</a>
-                            </li>
-                        
-                       
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Productos" asp-action="Index">Producto</a>
-                            </li>
-                        
-                      
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Proveedores" asp-action="Index">Proveedores</a>
-                            </li>
-                       
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="SalidaInsumos" asp-action="Index">SalidaInsumos</a>
-                            </li>
-                        
-
                     </ul>
                 </div>
             </div>
