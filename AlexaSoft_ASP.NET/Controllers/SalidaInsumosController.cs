@@ -60,22 +60,35 @@ namespace AlexaSoft_ASP.NET.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(salidaInsumo);
-
-                // Actualizar las unidades del producto
+                // Obtener el producto relacionado con el IdProducto
                 var producto = await _context.Productos.FindAsync(salidaInsumo.IdProducto);
+
                 if (producto != null)
                 {
+                    // Verificar si la cantidad de insumos a sacar es mayor que la cantidad disponible
+                    if (salidaInsumo.Cantidad > producto.Unidades)
+                    {
+                        ModelState.AddModelError("Cantidad", "La cantidad deseada excede la cantidad disponible.");
+                        ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "Nombre", salidaInsumo.IdProducto);
+                        return View(salidaInsumo);
+                    }
+
+                    // Actualizar las unidades del producto
                     producto.Unidades -= salidaInsumo.Cantidad;
                     _context.Update(producto);
                 }
 
+                // Agregar y guardar la salida de insumo
+                _context.Add(salidaInsumo);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            // Si el modelo no es válido, devolver la vista con el modelo y los datos necesarios para el dropdown
             ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "Nombre", salidaInsumo.IdProducto);
             return View(salidaInsumo);
         }
+
 
 
         // GET: SalidaInsumos/Edit/5
@@ -110,7 +123,18 @@ namespace AlexaSoft_ASP.NET.Controllers
             if (ModelState.IsValid)
             {
                 try
-                {
+                { 
+                    if (!string.IsNullOrEmpty(salidaInsumo.MotivoAnular))
+                    {
+                        // Obtener el producto correspondiente
+                        var producto = await _context.Productos.FindAsync(salidaInsumo.IdProducto);
+                        if (producto != null)
+                        {
+                            // Agregar las unidades de la salida de insumo a las unidades del producto
+                            producto.Unidades += salidaInsumo.Cantidad;
+                            _context.Update(producto);
+                        }
+                    }
                     _context.Update(salidaInsumo);
                     await _context.SaveChangesAsync();
                 }

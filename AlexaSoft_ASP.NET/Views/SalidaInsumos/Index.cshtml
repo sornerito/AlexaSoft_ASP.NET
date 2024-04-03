@@ -52,9 +52,16 @@
                 @Html.DisplayFor(modelItem => item.IdProductoNavigation.IdProducto)
             </td>
             <td>
-                <a class ="btn btn-warning" asp-action="Edit" asp-route-id="@item.IdInsumo">Editar </a> |
-                <a class="btn btn-success" asp-action="Details" asp-route-id="@item.IdInsumo">Detalle</a> |
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.IdInsumo">Eliminar</a>
+                 @if (string.IsNullOrEmpty(item.MotivoAnular))
+                    {
+                        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.IdInsumo">Editar </a> 
+                        <a class="btn btn-success" asp-action="Details" asp-route-id="@item.IdInsumo">Detalle</a> 
+
+                    }
+                    }else
+                    {
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.IdInsumo">Eliminar</a>
+                    }
             </td>
         </tr>
 }
