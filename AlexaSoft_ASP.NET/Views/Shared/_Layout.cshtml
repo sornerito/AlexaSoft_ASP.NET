@@ -53,8 +53,28 @@
                         }
                         @if (!string.IsNullOrEmpty(permisosJson) && TienePermiso("Gestionar Ventas"))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Ventas" asp-action="Index">Ventas</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Ventas
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Ventas" asp-action="Index">Venta</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Ventasdetalleproductos" asp-action="Index">Detalle Productos</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Ventasdetallesservicios" asp-action="Index">Detalle Servicios</a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (!string.IsNullOrEmpty(permisosJson) && TienePermiso("Gestionar Pedidos"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Pedidos
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Pedidos" asp-action="Index">Pedidos</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Detallespedidosproductos" asp-action="Index">Detalles Productos</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Detallespedidosservicios" asp-action="Index">Detalles Servicios</a></li>
+                                </ul>
                             </li>
                         }
                         @if (!string.IsNullOrEmpty(permisosJson) && TienePermiso("Gestionar Pedidos"))
