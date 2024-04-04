@@ -34,44 +34,43 @@ INSERT INTO alexa_soft.permisos (nombre, descripcion) VALUES
 --CAMBIAR DATOS SI NO COINCIDEN
 INSERT INTO alexa_soft.roles_permisos (idRol, idPermiso) VALUES 
 --Cliente (en mi caso de id 8, cambiar si no coincide)
-(8,30), --comprar
-(8,38), --clientes
-(8,40), --agendamiento
-(8,42), --acceso
+(2,30), --comprar
+(2,38), --clientes
+(2,40), --agendamiento
+(2,42), --acceso
 --Colaborador (en mi caso 9)
-(9,36), --ventas
-(9,39), --horario
-(9,40), --agendamiento
-(9,41), --colaboradores
-(9,42), --acceso
+(3,36), --ventas
+(3,39), --horario
+(3,40), --agendamiento
+(3,41), --colaboradores
+(3,42), --acceso
 --Usuario (administrador pero por alguna razon se llama asi)
-(10,27),
-(10,28),
-(10,29),
-(10,30),
-(10,31),
-(10,32),
-(10,33),
-(10,34),
-(10,35),
-(10,36),
-(10,37),
-(10,38),
-(10,39),
-(10,40),
-(10,41),
-(10,42)
+(1,1),
+(1,2),
+(1,3),
+(1,4),
+(1,5),
+(1,6),
+(1,7),
+(1,8),
+(1,9),
+(1,10),
+(1,11),
+(1,12),
+(1,13),
+(1,14),
+(1,15)
 
 
 --Insertar un dato en cada tabla (usuarios, clientes, colaboradores), el rol de pende de como se haya creado
 insert into alexa_soft.colaboradores (nombre, cedula, correo, telefono, contrasena, estado, fechaInteraccion, idRol) 
 VALUES 
-('Juana', '1472583695', 'juana@gmail.com', '3021012588', 'juanita', 'Desactivado', CURRENT_TIMESTAMP, 9)
+('Juana', '1472583695', 'juana@gmail.com', '3021012588', 'juanita', 'Desactivado', CURRENT_TIMESTAMP, 2)
 
 insert into alexa_soft.usuarios (nombre, instagram, correo, telefono, contrasena, estado, fechaInteraccion, idRol) 
 VALUES 
-('Tilin', 'eladmin', 'tilin@gmail.com', '3021014111', 'tilinDeidad', 'Activo', CURRENT_TIMESTAMP, 10)
+('Tilin', 'eladmin', 'tilin@gmail.com', '3021014111', 'tilinDeidad', 'Activo', CURRENT_TIMESTAMP, 1)
 
 insert into alexa_soft.clientes(nombre, instagram, correo, telefono, contrasena, estado, fechaInteraccion, idRol) 
 VALUES 
-('Brilis', 'jBrilis', 'brilis@gmail.com', '3052364111', 'jesusbrilis', 'Activo', CURRENT_TIMESTAMP, 8)
+('Brilis', 'jBrilis', 'brilis@gmail.com', '3052364111', 'jesusbrilis', 'Activo', CURRENT_TIMESTAMP, 3)
