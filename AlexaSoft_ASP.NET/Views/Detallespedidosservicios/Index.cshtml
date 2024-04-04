@@ -1,0 +1,48 @@
+﻿@model IEnumerable<AlexaSoft_ASP.NET.Models.Detallespedidosservicio>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Precio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdPaqueteNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdPedidoNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Precio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdPaqueteNavigation.IdPaquete)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdPedidoNavigation.IdPedido)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdDetallePedidoServicio">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdDetallePedidoServicio">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdDetallePedidoServicio">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
