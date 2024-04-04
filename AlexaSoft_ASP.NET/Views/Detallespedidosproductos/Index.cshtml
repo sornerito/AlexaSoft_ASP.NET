@@ -1,0 +1,62 @@
+﻿@model IEnumerable<AlexaSoft_ASP.NET.Models.Detallespedidosproducto>
+
+@{
+    ViewData["Title"] = "Detalles Productos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <h1 class="text-center">Detalles Productos</h1>
+        </div>
+        <div class="col-3"></div>
+    </div> <!--Fin Row-->
+</div>
+
+<p>
+    <a asp-action="Create" class="btn btn-lg fondoVino text-light">Crear Detalle</a>
+</p>
+<table class="table fs-6 table-bordered table-responsive" style="overflow:auto;">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UnidadesXproducto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrecioUnitario)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdPedidoNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdProductoNavigation)
+            </th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnidadesXproducto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PrecioUnitario)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdPedidoNavigation.IdPedido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdProductoNavigation.IdProducto)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdDetallePedidoProducto" class="btn btn-l fondoOro text-light">Editar</a>
+                <!-- <a asp-action="Details" asp-route-id="@item.IdDetallePedidoProducto">Details</a> -->
+                <a asp-action="Delete" asp-route-id="@item.IdDetallePedidoProducto" class="btn btn-l fondoVino text-light">Eliminar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

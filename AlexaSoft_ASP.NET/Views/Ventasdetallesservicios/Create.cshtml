@@ -1,0 +1,67 @@
+﻿@model AlexaSoft_ASP.NET.Models.Ventasdetallesservicio
+
+@{
+    ViewData["Title"] = "Crear Detalle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <div onclick="volver()" class="text-center">
+                <i class="fa fa-angle-left fa-3x clickeable"></i>
+            </div>
+        </div>
+        <div class="col-6">
+            <h1 class="text-center">Crear Detalle</h1>
+        </div>
+        <div class="col-3">
+        </div>
+    </div> <!--Fin Row-->
+</div>
+<br>
+<br>
+<div class="container bordeVino px-4">
+    <br>
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="IdVenta" class="control-label"></label>
+                <select asp-for="IdVenta" class ="form-control" asp-items="ViewBag.IdVenta"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdPaquete" class="control-label"></label>
+                <select asp-for="IdPaquete" class ="form-control" asp-items="ViewBag.IdPaquete"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cantidad" class="control-label"></label>
+                <input asp-for="Cantidad" class="form-control" />
+                <span asp-validation-for="Cantidad" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Subtotal" class="control-label"></label>
+                <input asp-for="Subtotal" class="form-control" />
+                <span asp-validation-for="Subtotal" class="text-danger"></span>
+            </div>
+            <br>
+            <div class="mb-3 row">
+                <div class="text-center">
+                    <button type="button" id="botonCrear" class="btn btn-lg fondoVino text-light">
+                        Crear
+                        Detalle
+                    </button>
+                </div>
+            </div><!--Fin Row-->
+        </form>
+    </div>
+
+<script>
+    //Funcion Volver
+    function volver() {
+        window.history.back();
+    }
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
