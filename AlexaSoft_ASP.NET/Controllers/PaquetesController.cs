@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AlexaSoft_ASP.NET.Models;
+using AlexaSoft_ASP.NET.Utilities;
 
 namespace AlexaSoft_ASP.NET.Controllers
 {
@@ -21,9 +22,13 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Paquetes
         public async Task<IActionResult> Index()
         {
-              return _context.Paquetes != null ? 
-                          View(await _context.Paquetes.ToListAsync()) :
-                          Problem("Entity set 'AlexasoftContext.Paquetes'  is null.");
+            
+            var paquetesconServicios = _context.Paquetes
+            .Include(p => p.PaquetesServicios)
+                .ThenInclude(Ps => Ps.IdServicioNavigation)
+            .ToList();
+
+            return View(paquetesconServicios);
         }
 
         // GET: Paquetes/Details/5
@@ -47,6 +52,8 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Paquetes/Create
         public IActionResult Create()
         {
+            ViewData["IdServicio"] = new SelectList(_context.Servicios, "IdServicio", "Nombre");
+
             return View();
         }
 
@@ -55,19 +62,35 @@ namespace AlexaSoft_ASP.NET.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdPaquete,Nombre,Descripcion,Estado")] Paquete paquete)
+        public async Task<IActionResult> Create([Bind("IdPaquete,Nombre,Descripcion,Estado")] Paquete paquete, int idServicio)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(paquete);
-                await _context.SaveChangesAsync();
+                int compraSaved = await _context.SaveChangesAsync();
+
+                if (compraSaved > 0)
+                {
+
+                    PaquetesServicio paquetesServicio = new PaquetesServicio
+                    {
+                        IdPaquete = paquete.IdPaquete,
+                        IdServicio = idServicio,
+                    };
+
+                    _context.PaquetesServicios.Add(paquetesServicio);
+                    await _context.SaveChangesAsync();
+                }
                 return RedirectToAction(nameof(Index));
+
             }
+
             return View(paquete);
         }
 
-        // GET: Paquetes/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+
+    // GET: Paquetes/Edit/5
+    public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Paquetes == null)
             {
@@ -157,6 +180,22 @@ namespace AlexaSoft_ASP.NET.Controllers
         private bool PaqueteExists(int id)
         {
           return (_context.Paquetes?.Any(e => e.IdPaquete == id)).GetValueOrDefault();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CambiarEstado(int idpaquete)
+        {
+           
+            var rol = await _context.Paquetes.FindAsync(idpaquete);
+            if (rol == null)
+            {
+                return NotFound();
+            }
+
+            rol.Estado = rol.Estado == "Activo" ? "Desactivado" : "Activo";
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }

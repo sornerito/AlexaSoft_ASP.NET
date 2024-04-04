@@ -103,7 +103,7 @@ namespace AlexaSoft_ASP.NET.Controllers
         // POST: Roles/Edit/
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdRol,Nombre,Estado")] Role role, int[] permisos)
+        public async Task<IActionResult> Edit(int id, Role role, int[] permisos)
         {
             if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Roles"))
             {
