@@ -1,16 +1,25 @@
 ﻿@model IEnumerable<AlexaSoft_ASP.NET.Models.Ventasdetallesservicio>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Detalles Servicios";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <h1 class="text-center">Detalles Servicios</h1>
+        </div>
+        <div class="col-3"></div>
+    </div> <!--Fin Row-->
+</div>
 
 <p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+    <a asp-action="Create" class="btn btn-lg fondoVino text-light">Crear Detalle</a>
+</p
+<div class="container">
+<table class="table fs-6 table-bordered table-responsive" style="overflow:auto;">
     <thead>
         <tr>
             <th>
@@ -25,7 +34,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.IdVentaNavigation)
             </th>
-            <th></th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -44,9 +53,9 @@
                 @Html.DisplayFor(modelItem => item.IdVentaNavigation.IdVenta)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.IdVentaDetalleServicio">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdVentaDetalleServicio">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdVentaDetalleServicio">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.IdVentaDetalleServicio" class="btn btn-l fondoOro text-light">Editar</a>
+                <!-- <a asp-action="Details" asp-route-id="@item.IdVentaDetalleServicio">Details</a> -->
+                <a asp-action="Delete" asp-route-id="@item.IdVentaDetalleServicio" class="btn btn-l fondoVino text-light">Eliminar</a>
             </td>
         </tr>
 }

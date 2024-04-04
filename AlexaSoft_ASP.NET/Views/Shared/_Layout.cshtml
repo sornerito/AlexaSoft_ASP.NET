@@ -77,12 +77,6 @@
                                 </ul>
                             </li>
                         }
-                        @if (!string.IsNullOrEmpty(permisosJson) && TienePermiso("Gestionar Pedidos"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Pedidos" asp-action="Index">Pedidos</a>
-                            </li>
-                        }
                         @if (!string.IsNullOrEmpty(permisosJson) && TienePermiso("Gestionar Categoria de Productos"))
                         {
                             <li class="nav-item">

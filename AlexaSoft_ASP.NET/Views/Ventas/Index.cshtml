@@ -19,7 +19,7 @@
     <a asp-action="Create" class="btn btn-lg fondoVino text-light">Crear Venta</a>
 </p
 <div class="container">
-<table class="table fs-5 table-bordered table-responsive" style="overflow:auto;">
+<table class="table fs-6 table-bordered table-responsive" style="overflow:auto;">
     <thead >
         <tr>
             <th>
@@ -77,9 +77,9 @@
                 @Html.DisplayFor(modelItem => item.IdUsuarioNavigation.IdUsuario)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.IdVenta">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdVenta">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdVenta">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.IdVenta" class="btn btn-l fondoOro text-light">Editar</a>
+                <!-- <a asp-action="Details" asp-route-id="@item.IdVenta">Details</a> -->
+                <a asp-action="Delete" asp-route-id="@item.IdVenta" class="btn btn-l fondoVino text-light">Eliminar</a>
             </td>
         </tr>
 }
