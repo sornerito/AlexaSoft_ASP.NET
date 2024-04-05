@@ -25,11 +25,6 @@
     <form asp-action="Create">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
-            <label asp-for="NumeroFactura" class="control-label"></label>
-            <input asp-for="NumeroFactura" class="form-control" />
-            <span asp-validation-for="NumeroFactura" class="text-danger"></span>
-        </div>
-        <div class="form-group">
             <label asp-for="IdPedido" class="control-label"></label>
             <select asp-for="IdPedido" class ="form-control" asp-items="ViewBag.IdPedido"></select>
         </div>
@@ -61,15 +56,12 @@
             <input asp-for="Iva" class="form-control" value="19" disabled/>
             <span asp-validation-for="Iva" class="text-danger"></span>
         </div>
-        <br>
+        <br />
         <div class="mb-3 row">
             <div class="text-center">
-                <button type="button" id="botonCrear" class="btn btn-lg fondoVino text-light">
-                    Crear
-                    Venta
-                </button>
+                <input type="submit" value="Crear Venta" class="btn btn-lg fondoVino text-light">
             </div>
-        </div><!--Fin Row-->
+        </div>
     </form>
     <br>
 </div>

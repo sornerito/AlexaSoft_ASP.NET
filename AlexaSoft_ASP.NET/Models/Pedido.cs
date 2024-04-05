@@ -9,7 +9,7 @@ public partial class Pedido
 
     public DateTime FechaCreacion { get; set; }
 
-    public DateTime FechaFinalizacion { get; set; }
+    public DateTime? FechaFinalizacion { get; set; }
 
     public string Estado { get; set; } = null!;
 

@@ -28,7 +28,7 @@
             <input type="hidden" asp-for="IdVenta" />
             <div class="form-group">
                 <label asp-for="NumeroFactura" class="control-label"></label>
-                <input asp-for="NumeroFactura" class="form-control" />
+                <input asp-for="NumeroFactura" class="form-control"/>
                 <span asp-validation-for="NumeroFactura" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -63,17 +63,15 @@
             </div>
             <div class="form-group">
                 <label asp-for="Iva" class="control-label"></label>
-                <input asp-for="Iva" class="form-control" disabled/>
+                <input asp-for="Iva" class="form-control" value="19" disabled/>
                 <span asp-validation-for="Iva" class="text-danger"></span>
             </div>
+            <br />
             <div class="mb-3 row">
                 <div class="text-center">
-                    <button type="button" id="botonCrear" class="btn btn-lg fondoVino text-light">
-                        Editar
-                        Venta
-                    </button>
+                    <input type="submit" value="Editar Venta" class="btn btn-lg fondoVino text-light">
                 </div>
-            </div><!--Fin Row-->
+            </div>
     </form>
     <br>
 </div>

@@ -48,8 +48,8 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Pedidos/Create
         public IActionResult Create()
         {
-            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "IdCliente");
-            ViewData["IdColaborador"] = new SelectList(_context.Colaboradores, "IdColaborador", "IdColaborador");
+            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "Nombre");
+            ViewData["IdColaborador"] = new SelectList(_context.Colaboradores, "IdColaborador", "Nombre");
             return View();
         }
 
@@ -60,14 +60,18 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdPedido,FechaCreacion,FechaFinalizacion,Estado,Total,Iva,IdCliente,IdColaborador")] Pedido pedido)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
+                pedido.Estado = "Pendiente";
+                pedido.Iva = 19;
+                pedido.FechaCreacion = DateTime.Now;
+
                 _context.Add(pedido);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "IdCliente", pedido.IdCliente);
-            ViewData["IdColaborador"] = new SelectList(_context.Colaboradores, "IdColaborador", "IdColaborador", pedido.IdColaborador);
+            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "Nombre", pedido.IdCliente);
+            ViewData["IdColaborador"] = new SelectList(_context.Colaboradores, "IdColaborador", "Nombre", pedido.IdColaborador);
             return View(pedido);
         }
 
@@ -84,8 +88,8 @@ namespace AlexaSoft_ASP.NET.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "IdCliente", pedido.IdCliente);
-            ViewData["IdColaborador"] = new SelectList(_context.Colaboradores, "IdColaborador", "IdColaborador", pedido.IdColaborador);
+            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "Nombre", pedido.IdCliente);
+            ViewData["IdColaborador"] = new SelectList(_context.Colaboradores, "IdColaborador", "Nombre", pedido.IdColaborador);
             return View(pedido);
         }
 
@@ -101,11 +105,19 @@ namespace AlexaSoft_ASP.NET.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 try
                 {
+                    pedido.Iva = 19;
                     _context.Update(pedido);
+
+                    // Establecer la fecha de finalización si el estado es "Aceptado" o "Cancelado"
+                    if (pedido.Estado == "Aceptado" || pedido.Estado == "Cancelado")
+                    {
+                        pedido.FechaFinalizacion = DateTime.Now;
+                    }
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -121,8 +133,8 @@ namespace AlexaSoft_ASP.NET.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "IdCliente", pedido.IdCliente);
-            ViewData["IdColaborador"] = new SelectList(_context.Colaboradores, "IdColaborador", "IdColaborador", pedido.IdColaborador);
+            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "Nombre", pedido.IdCliente);
+            ViewData["IdColaborador"] = new SelectList(_context.Colaboradores, "IdColaborador", "Nombre", pedido.IdColaborador);
             return View(pedido);
         }
 

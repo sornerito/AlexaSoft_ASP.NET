@@ -45,9 +45,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">Roles</a>
-                        </li>
                         @if (!string.IsNullOrEmpty(permisosJson) && TienePermiso("Gestionar Roles"))
                         {
                             <li class="nav-item">
@@ -134,12 +131,6 @@
                             </li>
 
                         }
-                       
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Ventas" asp-action="Index">Ventas</a>
-                            </li>
-                        
-                        
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="CategoriaProductos" asp-action="Index">CategoriaProductos</a>
                             </li>

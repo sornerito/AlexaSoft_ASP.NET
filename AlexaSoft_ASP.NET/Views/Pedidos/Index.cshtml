@@ -46,35 +46,38 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var item in Model)
+        {
             <tr>
                 <td>
-                @Html.DisplayFor(modelItem => item.FechaCreacion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaFinalizacion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Total)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Iva)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdClienteNavigation.IdCliente)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdColaboradorNavigation.IdColaborador)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdPedido" class="btn btn-l fondoOro text-light">Editar</a>
-                <!-- <a asp-action="Details" asp-route-id="@item.IdPedido">Details</a> -->
-                <a asp-action="Delete" asp-route-id="@item.IdPedido" class="btn btn-l fondoVino text-light">Eliminar</a>
-            </td>
-        </tr>
-}
+                    @Html.DisplayFor(modelItem => item.FechaCreacion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaFinalizacion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estado)
+                </td>
+                <td>
+                    $@Html.DisplayFor(modelItem => item.Total)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Iva)%
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdClienteNavigation.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdColaboradorNavigation.Nombre)
+                </td>
+                <td>
+                    @if (item.Estado == "Pendiente")
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.IdPedido" class="btn btn-l fondoOro text-light">Editar</a>
+                        <a asp-action="Delete" asp-route-id="@item.IdPedido" class="btn btn-l fondoVino text-light">Eliminar</a>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
