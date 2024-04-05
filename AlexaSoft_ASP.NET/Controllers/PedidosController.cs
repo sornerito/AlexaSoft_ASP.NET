@@ -139,6 +139,23 @@ namespace AlexaSoft_ASP.NET.Controllers
             {
                 try
                 {
+                    //if (!string.IsNullOrEmpty(pedido.Estado))
+                    //{
+                    //    var detallesPedido = await _context.Detallesproductosxcompras.Where(d => d.IdProducto == pedido.Estado).ToListAsync();
+                    //    if (detallesPedido != null)
+                    //    {
+                    //        // Restar las unidades de los productos correspondientes
+                    //        foreach (var detalle in detallesPedido)
+                    //        {
+                    //            var producto = await _context.Productos.FindAsync(detalle.IdProducto);
+                    //            if (producto != null)
+                    //            {
+                    //                producto.Unidades -= detalle.Unidades;
+                    //                _context.Update(producto);
+                    //            }
+                    //        }
+                    //    }
+                    //}
                     pedido.Iva = 19;
                     _context.Update(pedido);
 
