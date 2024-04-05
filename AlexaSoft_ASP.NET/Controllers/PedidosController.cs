@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AlexaSoft_ASP.NET.Models;
+using AlexaSoft_ASP.NET.Utilities;
 
 namespace AlexaSoft_ASP.NET.Controllers
 {
@@ -21,13 +22,26 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Pedidos
         public async Task<IActionResult> Index()
         {
-            var alexasoftContext = _context.Pedidos.Include(p => p.IdClienteNavigation).Include(p => p.IdColaboradorNavigation);
-            return View(await alexasoftContext.ToListAsync());
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            var pedidos = await _context.Pedidos
+                        .Include(p => p.IdClienteNavigation)
+                        .Include(p => p.IdColaboradorNavigation)
+                        .OrderBy(p => p.Estado == "Pendiente" ? 0 : p.Estado == "Aceptado" ? 1 : 2)
+                        .ToListAsync();
+
+            return View(pedidos);
         }
 
         // GET: Pedidos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Pedidos == null)
             {
                 return NotFound();
@@ -48,8 +62,12 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Pedidos/Create
         public IActionResult Create()
         {
-            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "IdCliente");
-            ViewData["IdColaborador"] = new SelectList(_context.Colaboradores, "IdColaborador", "IdColaborador");
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "Nombre");
+            ViewData["IdColaborador"] = new SelectList(_context.Colaboradores, "IdColaborador", "Nombre");
             return View();
         }
 
@@ -60,20 +78,32 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdPedido,FechaCreacion,FechaFinalizacion,Estado,Total,Iva,IdCliente,IdColaborador")] Pedido pedido)
         {
-            if (ModelState.IsValid)
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
             {
+                return RedirectToAction("Error", "Home");
+            }
+            if (!ModelState.IsValid)
+            {
+                pedido.Estado = "Pendiente";
+                pedido.Iva = 19;
+                pedido.FechaCreacion = DateTime.Now;
+
                 _context.Add(pedido);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "IdCliente", pedido.IdCliente);
-            ViewData["IdColaborador"] = new SelectList(_context.Colaboradores, "IdColaborador", "IdColaborador", pedido.IdColaborador);
+            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "Nombre", pedido.IdCliente);
+            ViewData["IdColaborador"] = new SelectList(_context.Colaboradores, "IdColaborador", "Nombre", pedido.IdColaborador);
             return View(pedido);
         }
 
         // GET: Pedidos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Pedidos == null)
             {
                 return NotFound();
@@ -84,8 +114,8 @@ namespace AlexaSoft_ASP.NET.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "IdCliente", pedido.IdCliente);
-            ViewData["IdColaborador"] = new SelectList(_context.Colaboradores, "IdColaborador", "IdColaborador", pedido.IdColaborador);
+            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "Nombre", pedido.IdCliente);
+            ViewData["IdColaborador"] = new SelectList(_context.Colaboradores, "IdColaborador", "Nombre", pedido.IdColaborador);
             return View(pedido);
         }
 
@@ -96,16 +126,45 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdPedido,FechaCreacion,FechaFinalizacion,Estado,Total,Iva,IdCliente,IdColaborador")] Pedido pedido)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id != pedido.IdPedido)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 try
                 {
+                    //if (!string.IsNullOrEmpty(pedido.Estado))
+                    //{
+                    //    var detallesPedido = await _context.Detallesproductosxcompras.Where(d => d.IdProducto == pedido.Estado).ToListAsync();
+                    //    if (detallesPedido != null)
+                    //    {
+                    //        // Restar las unidades de los productos correspondientes
+                    //        foreach (var detalle in detallesPedido)
+                    //        {
+                    //            var producto = await _context.Productos.FindAsync(detalle.IdProducto);
+                    //            if (producto != null)
+                    //            {
+                    //                producto.Unidades -= detalle.Unidades;
+                    //                _context.Update(producto);
+                    //            }
+                    //        }
+                    //    }
+                    //}
+                    pedido.Iva = 19;
                     _context.Update(pedido);
+
+                    // Establecer la fecha de finalización si el estado es "Aceptado" o "Cancelado"
+                    if (pedido.Estado == "Aceptado" || pedido.Estado == "Cancelado")
+                    {
+                        pedido.FechaFinalizacion = DateTime.Now;
+                    }
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -121,14 +180,18 @@ namespace AlexaSoft_ASP.NET.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "IdCliente", pedido.IdCliente);
-            ViewData["IdColaborador"] = new SelectList(_context.Colaboradores, "IdColaborador", "IdColaborador", pedido.IdColaborador);
+            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "Nombre", pedido.IdCliente);
+            ViewData["IdColaborador"] = new SelectList(_context.Colaboradores, "IdColaborador", "Nombre", pedido.IdColaborador);
             return View(pedido);
         }
 
         // GET: Pedidos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Pedidos == null)
             {
                 return NotFound();
@@ -151,6 +214,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (_context.Pedidos == null)
             {
                 return Problem("Entity set 'AlexasoftContext.Pedidos'  is null.");

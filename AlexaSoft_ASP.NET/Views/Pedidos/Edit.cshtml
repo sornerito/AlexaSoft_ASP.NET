@@ -23,57 +23,63 @@
 <br>
 <div class="container bordeVino px-4">
     <br>
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="IdPedido" />
-            <div class="form-group">
-                <label asp-for="FechaCreacion" class="control-label"></label>
-                <input asp-for="FechaCreacion" class="form-control" />
-                <span asp-validation-for="FechaCreacion" class="text-danger"></span>
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="IdPedido" />
+        <div class="form-group">
+            <label asp-for="FechaCreacion" hidden class="control-label"></label>
+            <input asp-for="FechaCreacion" hidden class="form-control" />
+            <span asp-validation-for="FechaCreacion" class="text-danger"></span>
+        </div>
+        @if (Model.Estado == "Aceptado" || Model.Estado == "Cancelado")
+{
+        <div class="form-group">
+             <label asp-for="FechaFinalizacion" hidden class="control-label"></label>
+             <input asp-for="FechaFinalizacion" hidden class="form-control" disabled />
+            <span asp-validation-for="FechaFinalizacion" class="text-danger"></span>
+        </div>
+}
+        <div class="form-group">
+            <label asp-for="Estado" class="control-label"></label>
+            <select asp-for="Estado" class="form-control">
+                <option value="Aceptado">Aceptado</option>
+                <option value="Cancelado">Cancelado</option>
+            </select>
+            <span asp-validation-for="Estado" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Total" class="control-label"></label>
+            <input asp-for="Total" class="form-control" />
+            <span asp-validation-for="Total" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Iva" class="control-label"></label>
+            <input asp-for="Iva" class="form-control" value="19" disabled />
+            <span asp-validation-for="Iva" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="IdCliente" class="control-label"></label>
+            <select asp-for="IdCliente" class="form-control" asp-items="ViewBag.IdCliente"></select>
+            <span asp-validation-for="IdCliente" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="IdColaborador" class="control-label"></label>
+            <select asp-for="IdColaborador" class="form-control" asp-items="ViewBag.IdColaborador"></select>
+            <span asp-validation-for="IdColaborador" class="text-danger"></span>
+        </div>
+        <br />
+        <div class="mb-3 row">
+            <div class="text-center">
+                <input type="submit" value="Editar Pedido" class="btn btn-lg fondoVino text-light">
             </div>
-            <div class="form-group">
-                <label asp-for="FechaFinalizacion" class="control-label"></label>
-                <input asp-for="FechaFinalizacion" class="form-control" />
-                <span asp-validation-for="FechaFinalizacion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Estado" class="control-label"></label>
-                <input asp-for="Estado" class="form-control" />
-                <span asp-validation-for="Estado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Total" class="control-label"></label>
-                <input asp-for="Total" class="form-control" />
-                <span asp-validation-for="Total" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Iva" class="control-label"></label>
-                <input asp-for="Iva" class="form-control" disabled />
-                <span asp-validation-for="Iva" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdCliente" class="control-label"></label>
-                <select asp-for="IdCliente" class="form-control" asp-items="ViewBag.IdCliente"></select>
-                <span asp-validation-for="IdCliente" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdColaborador" class="control-label"></label>
-                <select asp-for="IdColaborador" class="form-control" asp-items="ViewBag.IdColaborador"></select>
-                <span asp-validation-for="IdColaborador" class="text-danger"></span>
-            </div>
-            <div class="mb-3 row">
-                <div class="text-center">
-                    <button type="button" id="botonCrear" class="btn btn-lg fondoVino text-light">
-                        Editar
-                        Pedido
-                    </button>
-                </div>
-            </div><!--Fin Row-->
+        </div>
     </form>
     <br>
 </div>
 
+
 <script>
+
     //Funcion Volver
     function volver() {
         window.history.back();

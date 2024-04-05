@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AlexaSoft_ASP.NET.Models;
 using System.Data;
+using AlexaSoft_ASP.NET.Utilities;
 
 namespace AlexaSoft_ASP.NET.Controllers
 {
@@ -22,6 +23,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Compras
         public async Task<IActionResult> Index()
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Compras"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             var alexasoftContext = _context.Compras.Include(c => c.IdProveedorNavigation);
             return View(await alexasoftContext.ToListAsync());
         }
@@ -29,6 +34,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Compras/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Compras"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Compras == null)
             {
                 return NotFound();
@@ -49,6 +58,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         public IActionResult Create()
 
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Compras"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             ViewData["IdProveedor"] = new SelectList(_context.Proveedores, "IdProveedor", "Nombre");
             ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "Nombre");
 
@@ -62,6 +75,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdCompra,IdProveedor,Precio,Fecha,Subtotal,MotivoAnular")] Compra compra, int idProducto, int Unidades, int idDetalles)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Compras"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(compra);
@@ -104,6 +121,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Compras/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Compras"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Compras == null)
             {
                 return NotFound();
@@ -125,6 +146,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdCompra,IdProveedor,Precio,Fecha,Subtotal,MotivoAnular")] Compra compra)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Compras"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id != compra.IdCompra)
             {
                 return NotFound();
@@ -174,6 +199,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Compras/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Compras"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Compras == null)
             {
                 return NotFound();
@@ -195,6 +224,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Compras"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (_context.Compras == null)
             {
                 return Problem("Entity set 'AlexasoftContext.Compras'  is null.");

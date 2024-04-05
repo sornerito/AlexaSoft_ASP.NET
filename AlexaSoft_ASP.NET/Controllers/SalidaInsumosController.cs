@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AlexaSoft_ASP.NET.Models;
+using AlexaSoft_ASP.NET.Utilities;
 
 namespace AlexaSoft_ASP.NET.Controllers
 {
@@ -21,6 +22,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: SalidaInsumos
         public async Task<IActionResult> Index()
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Insumos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             var alexasoftContext = _context.SalidaInsumos.Include(s => s.IdProductoNavigation);
             return View(await alexasoftContext.ToListAsync());
         }
@@ -28,6 +33,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: SalidaInsumos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Insumos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.SalidaInsumos == null)
             {
                 return NotFound();
@@ -47,7 +56,23 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: SalidaInsumos/Create
         public IActionResult Create()
         {
-            ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "Nombre");
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Insumos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            var productosActivos = _context.Productos.Where(p => p.Estado == "Activo").ToList();
+
+           
+            var productosSelectList = productosActivos.Select(p => new SelectListItem
+            {
+                Value = p.IdProducto.ToString(),
+                Text = p.Nombre
+            }).ToList();
+
+            
+            ViewData["IdProducto"] = new SelectList(productosSelectList, "Value", "Text");
+
+
             return View();
         }
 
@@ -58,14 +83,18 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdInsumo,IdProducto,FechaRetiro,Cantidad,MotivoAnular")] SalidaInsumo salidaInsumo)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Insumos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (ModelState.IsValid)
             {
-                // Obtener el producto relacionado con el IdProducto
+                
                 var producto = await _context.Productos.FindAsync(salidaInsumo.IdProducto);
 
                 if (producto != null)
                 {
-                    // Verificar si la cantidad de insumos a sacar es mayor que la cantidad disponible
+                    
                     if (salidaInsumo.Cantidad > producto.Unidades)
                     {
                         ModelState.AddModelError("Cantidad", "La cantidad deseada excede la cantidad disponible.");
@@ -73,18 +102,17 @@ namespace AlexaSoft_ASP.NET.Controllers
                         return View(salidaInsumo);
                     }
 
-                    // Actualizar las unidades del producto
                     producto.Unidades -= salidaInsumo.Cantidad;
                     _context.Update(producto);
                 }
 
-                // Agregar y guardar la salida de insumo
+               
                 _context.Add(salidaInsumo);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            // Si el modelo no es válido, devolver la vista con el modelo y los datos necesarios para el dropdown
+            
             ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "Nombre", salidaInsumo.IdProducto);
             return View(salidaInsumo);
         }
@@ -94,6 +122,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: SalidaInsumos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Insumos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.SalidaInsumos == null)
             {
                 return NotFound();
@@ -115,6 +147,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdInsumo,IdProducto,FechaRetiro,Cantidad,MotivoAnular")] SalidaInsumo salidaInsumo)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Insumos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id != salidaInsumo.IdInsumo)
             {
                 return NotFound();
@@ -130,7 +166,6 @@ namespace AlexaSoft_ASP.NET.Controllers
                         var producto = await _context.Productos.FindAsync(salidaInsumo.IdProducto);
                         if (producto != null)
                         {
-                            // Agregar las unidades de la salida de insumo a las unidades del producto
                             producto.Unidades += salidaInsumo.Cantidad;
                             _context.Update(producto);
                         }
@@ -158,6 +193,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: SalidaInsumos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Insumos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.SalidaInsumos == null)
             {
                 return NotFound();
@@ -179,6 +218,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Insumos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (_context.SalidaInsumos == null)
             {
                 return Problem("Entity set 'AlexasoftContext.SalidaInsumos'  is null.");

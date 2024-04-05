@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AlexaSoft_ASP.NET.Models;
+using AlexaSoft_ASP.NET.Utilities;
 
 namespace AlexaSoft_ASP.NET.Controllers
 {
@@ -21,6 +22,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Ventasdetalleproductos
         public async Task<IActionResult> Index()
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Ventas"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             var alexasoftContext = _context.Ventasdetalleproductos.Include(v => v.IdProductoNavigation).Include(v => v.IdVentaNavigation);
             return View(await alexasoftContext.ToListAsync());
         }
@@ -28,6 +33,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Ventasdetalleproductos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Ventas"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Ventasdetalleproductos == null)
             {
                 return NotFound();
@@ -48,6 +57,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Ventasdetalleproductos/Create
         public IActionResult Create()
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Ventas"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "IdProducto");
             ViewData["IdVenta"] = new SelectList(_context.Ventas, "IdVenta", "IdVenta");
             return View();
@@ -60,7 +73,11 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdVentaDetalleProducto,IdVenta,IdProducto,PrecioUnitario,Cantidad")] Ventasdetalleproducto ventasdetalleproducto)
         {
-            if (ModelState.IsValid)
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Ventas"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            if (!ModelState.IsValid)
             {
                 _context.Add(ventasdetalleproducto);
                 await _context.SaveChangesAsync();
@@ -74,6 +91,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Ventasdetalleproductos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Ventas"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Ventasdetalleproductos == null)
             {
                 return NotFound();
@@ -96,6 +117,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdVentaDetalleProducto,IdVenta,IdProducto,PrecioUnitario,Cantidad")] Ventasdetalleproducto ventasdetalleproducto)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Ventas"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id != ventasdetalleproducto.IdVentaDetalleProducto)
             {
                 return NotFound();
@@ -129,6 +154,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Ventasdetalleproductos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Ventas"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Ventasdetalleproductos == null)
             {
                 return NotFound();
@@ -151,6 +180,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Ventas"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (_context.Ventasdetalleproductos == null)
             {
                 return Problem("Entity set 'AlexasoftContext.Ventasdetalleproductos'  is null.");

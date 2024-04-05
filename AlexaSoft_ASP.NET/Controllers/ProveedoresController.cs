@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AlexaSoft_ASP.NET.Models;
+using AlexaSoft_ASP.NET.Utilities;
 
 namespace AlexaSoft_ASP.NET.Controllers
 {
@@ -21,7 +22,11 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Proveedores
         public async Task<IActionResult> Index()
         {
-              return _context.Proveedores != null ? 
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Proveedores"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            return _context.Proveedores != null ? 
                           View(await _context.Proveedores.ToListAsync()) :
                           Problem("Entity set 'AlexasoftContext.Proveedores'  is null.");
         }
@@ -29,6 +34,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Proveedores/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Proveedores"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Proveedores == null)
             {
                 return NotFound();
@@ -47,6 +56,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Proveedores/Create
         public IActionResult Create()
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Proveedores"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             return View();
         }
 
@@ -57,6 +70,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdProveedor,Nombre,Descripcion,Telefono")] Proveedore proveedore)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Proveedores"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(proveedore);
@@ -69,6 +86,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Proveedores/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Proveedores"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Proveedores == null)
             {
                 return NotFound();
@@ -89,6 +110,14 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdProveedor,Nombre,Descripcion,Telefono")] Proveedore proveedore)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Proveedores"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Proveedores"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id != proveedore.IdProveedor)
             {
                 return NotFound();
@@ -120,6 +149,11 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Proveedores/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Proveedores"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Proveedores == null)
             {
                 return NotFound();
@@ -140,6 +174,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Proveedores"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (_context.Proveedores == null)
             {
                 return Problem("Entity set 'AlexasoftContext.Proveedores'  is null.");

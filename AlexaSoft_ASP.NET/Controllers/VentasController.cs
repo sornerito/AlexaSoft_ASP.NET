@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AlexaSoft_ASP.NET.Models;
+using AlexaSoft_ASP.NET.Utilities;
 
 namespace AlexaSoft_ASP.NET.Controllers
 {
@@ -21,6 +22,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Ventas
         public async Task<IActionResult> Index()
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Ventas"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             var alexasoftContext = _context.Ventas.Include(v => v.IdColaboradorNavigation).Include(v => v.IdPedidoNavigation).Include(v => v.IdUsuarioNavigation);
             return View(await alexasoftContext.ToListAsync());
         }
@@ -28,6 +33,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Ventas/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Ventas"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Ventas == null)
             {
                 return NotFound();
@@ -49,6 +58,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Ventas/Create
         public IActionResult Create()
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Ventas"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             ViewData["IdColaborador"] = new SelectList(_context.Colaboradores, "IdColaborador", "IdColaborador");
             ViewData["IdPedido"] = new SelectList(_context.Pedidos, "IdPedido", "IdPedido");
             ViewData["IdUsuario"] = new SelectList(_context.Usuarios, "IdUsuario", "IdUsuario");
@@ -62,8 +75,15 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdVenta,NumeroFactura,IdPedido,IdColaborador,Fecha,MotivoAnular,IdUsuario,Total,Iva")] Venta venta)
         {
-            if (ModelState.IsValid)
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Ventas"))
             {
+                return RedirectToAction("Error", "Home");
+            }
+            if (!ModelState.IsValid)
+            {
+                // Generar el número de factura automáticamente
+                venta.NumeroFactura = GenerateInvoiceNumber();
+                venta.Iva = 19;
                 _context.Add(venta);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -77,6 +97,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Ventas/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Ventas"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Ventas == null)
             {
                 return NotFound();
@@ -100,15 +124,20 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdVenta,NumeroFactura,IdPedido,IdColaborador,Fecha,MotivoAnular,IdUsuario,Total,Iva")] Venta venta)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Ventas"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id != venta.IdVenta)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 try
-                {
+                {   
+                    venta.Iva = 19;
                     _context.Update(venta);
                     await _context.SaveChangesAsync();
                 }
@@ -134,6 +163,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Ventas/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Ventas"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Ventas == null)
             {
                 return NotFound();
@@ -157,6 +190,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Ventas"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (_context.Ventas == null)
             {
                 return Problem("Entity set 'AlexasoftContext.Ventas'  is null.");
@@ -175,5 +212,27 @@ namespace AlexaSoft_ASP.NET.Controllers
         {
           return (_context.Ventas?.Any(e => e.IdVenta == id)).GetValueOrDefault();
         }
+
+        // Método para generar el número de factura
+        private string GenerateInvoiceNumber()
+        {
+            string prefix = "FACT-" + DateTime.Now.Year.ToString() + "-";
+            string lastInvoiceNumber = _context.Ventas.OrderBy(v => v.IdVenta).Select(v => v.NumeroFactura).LastOrDefault();
+            int lastNumber = 0;
+
+            if (!string.IsNullOrEmpty(lastInvoiceNumber))
+            {
+                // Extraer el número de factura anterior y aumentarlo en uno
+                string lastNumberStr = lastInvoiceNumber.Split('-').Last();
+                if (int.TryParse(lastNumberStr, out lastNumber))
+                {
+                    lastNumber++;
+                }
+            }
+
+            string invoiceNumber = prefix + lastNumber.ToString().PadLeft(3, '0');
+            return invoiceNumber;
+        }
+
     }
 }

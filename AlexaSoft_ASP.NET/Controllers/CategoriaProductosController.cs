@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AlexaSoft_ASP.NET.Models;
+using AlexaSoft_ASP.NET.Utilities;
 
 namespace AlexaSoft_ASP.NET.Controllers
 {
@@ -21,7 +22,11 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: CategoriaProductos
         public async Task<IActionResult> Index()
         {
-              return _context.CategoriaProductos != null ? 
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Categoria de Productos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            return _context.CategoriaProductos != null ? 
                           View(await _context.CategoriaProductos.ToListAsync()) :
                           Problem("Entity set 'AlexasoftContext.CategoriaProductos'  is null.");
         }
@@ -29,6 +34,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: CategoriaProductos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Categoria de Productos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.CategoriaProductos == null)
             {
                 return NotFound();
@@ -47,6 +56,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: CategoriaProductos/Create
         public IActionResult Create()
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Categoria de Productos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             return View();
         }
 
@@ -57,6 +70,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdCategoriaProducto,Nombre")] CategoriaProducto categoriaProducto)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Categoria de Productos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(categoriaProducto);
@@ -69,6 +86,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: CategoriaProductos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Categoria de Productos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.CategoriaProductos == null)
             {
                 return NotFound();
@@ -89,6 +110,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdCategoriaProducto,Nombre")] CategoriaProducto categoriaProducto)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Categoria de Productos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id != categoriaProducto.IdCategoriaProducto)
             {
                 return NotFound();
@@ -120,6 +145,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: CategoriaProductos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Categoria de Productos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.CategoriaProductos == null)
             {
                 return NotFound();
@@ -140,6 +169,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Categoria de Productos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (_context.CategoriaProductos == null)
             {
                 return Problem("Entity set 'AlexasoftContext.CategoriaProductos'  is null.");
