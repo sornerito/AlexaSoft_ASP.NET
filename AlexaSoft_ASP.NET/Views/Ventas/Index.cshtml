@@ -7,81 +7,81 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-3"></div>
-        <div class="col-6">
+        <div class="col-12">
             <h1 class="text-center">Ventas</h1>
         </div>
-        <div class="col-3"></div>
     </div> <!--Fin Row-->
 </div>
 
+<br />
+
 <p>
     <a asp-action="Create" class="btn btn-lg fondoVino text-light">Crear Venta</a>
-</p
-<div class="container">
-<table class="table fs-6 table-bordered table-responsive" style="overflow:auto;">
-    <thead >
+</p>
+
+<div class="container mb-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" id="searchInput" class="form-control" placeholder="Buscar...">
+                <!--<button class="btn btn-outline-secondary" type="button" id="searchButton">Buscar</button>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<table id="tablaVentas" class="table fs-6 table-bordered table-responsive" style="overflow:auto;">
+    <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.NumeroFactura)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Fecha)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MotivoAnular)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Total)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Iva)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdColaboradorNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdPedidoNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdUsuarioNavigation)
-            </th>
+            <th>@Html.DisplayNameFor(model => model.NumeroFactura)</th>
+            <th>@Html.DisplayNameFor(model => model.Fecha)</th>
+            <th>@Html.DisplayNameFor(model => model.MotivoAnular)</th>
+            <th>@Html.DisplayNameFor(model => model.Total)</th>
+            <th>@Html.DisplayNameFor(model => model.Iva)</th>
+            <th>@Html.DisplayNameFor(model => model.IdColaboradorNavigation)</th>
+            <th>@Html.DisplayNameFor(model => model.IdPedidoNavigation)</th>
+            <th>@Html.DisplayNameFor(model => model.IdUsuarioNavigation)</th>
             <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumeroFactura)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Fecha)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MotivoAnular)
-            </td>
-            <td>
-                $@Html.DisplayFor(modelItem => item.Total)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Iva)%
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdColaboradorNavigation.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdPedidoNavigation.IdPedido)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdUsuarioNavigation.Nombre)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdVenta" class="btn btn-l fondoOro text-light">Editar</a>
-                <!-- <a asp-action="Details" asp-route-id="@item.IdVenta">Details</a> -->
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr class="venta">
+                <td>@Html.DisplayFor(modelItem => item.NumeroFactura)</td>
+                <td>@Html.DisplayFor(modelItem => item.Fecha)</td>
+                <td>@Html.DisplayFor(modelItem => item.MotivoAnular)</td>
+                <td>$@Html.DisplayFor(modelItem => item.Total)</td>
+                <td>@Html.DisplayFor(modelItem => item.Iva)%</td>
+                <td>@Html.DisplayFor(modelItem => item.IdColaboradorNavigation.Nombre)</td>
+                <td>@Html.DisplayFor(modelItem => item.IdPedidoNavigation.IdPedido)</td>
+                <td>@Html.DisplayFor(modelItem => item.IdUsuarioNavigation.Nombre)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdVenta" class="btn btn-l fondoOro text-light">Editar</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
-</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#searchInput').on('input', function () {
+                search();
+            });
+
+            function search() {
+                var searchText = $('#searchInput').val().toLowerCase();
+                $('.venta').each(function () {
+                    var rowText = $(this).text().toLowerCase();
+                    if (rowText.includes(searchText)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            }
+        });
+    </script>
+}

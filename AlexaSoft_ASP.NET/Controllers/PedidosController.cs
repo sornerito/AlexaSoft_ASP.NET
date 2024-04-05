@@ -21,8 +21,13 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Pedidos
         public async Task<IActionResult> Index()
         {
-            var alexasoftContext = _context.Pedidos.Include(p => p.IdClienteNavigation).Include(p => p.IdColaboradorNavigation);
-            return View(await alexasoftContext.ToListAsync());
+            var pedidos = await _context.Pedidos
+                        .Include(p => p.IdClienteNavigation)
+                        .Include(p => p.IdColaboradorNavigation)
+                        .OrderBy(p => p.Estado == "Pendiente" ? 0 : p.Estado == "Aceptado" ? 1 : 2)
+                        .ToListAsync();
+
+            return View(pedidos);
         }
 
         // GET: Pedidos/Details/5
