@@ -26,18 +26,18 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="FechaCreacion" class="control-label"></label>
-                <input asp-for="FechaCreacion" class="form-control" />
+                <label asp-for="FechaCreacion" hidden class="control-label"></label>
+                <input asp-for="FechaCreacion" hidden class="form-control" />
                 <span asp-validation-for="FechaCreacion" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FechaFinalizacion" class="control-label"></label>
-                <input asp-for="FechaFinalizacion" class="form-control" />
+                <label asp-for="FechaFinalizacion" hidden class="control-label"></label>
+                <input asp-for="FechaFinalizacion" hidden class="form-control" />
                 <span asp-validation-for="FechaFinalizacion" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Estado" class="control-label"></label>
-                <input asp-for="Estado" class="form-control" />
+                <input asp-for="Estado" class="form-control" value="Pendiente" disabled/>
                 <span asp-validation-for="Estado" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -47,7 +47,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Iva" class="control-label"></label>
-                <input asp-for="Iva" class="form-control" />
+                <input asp-for="Iva" class="form-control" value="19" disabled />
                 <span asp-validation-for="Iva" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -61,12 +61,9 @@
             <br />
             <div class="mb-3 row">
                 <div class="text-center">
-                    <button type="button" id="botonCrear" class="btn btn-lg fondoVino text-light">
-                        Crear
-                        Pedido
-                    </button>
+                    <input type="submit" value="Crear Pedido" class="btn btn-lg fondoVino text-light">
                 </div>
-            </div><!--Fin Row-->
+            </div>
     </form>
     <br>
 </div>

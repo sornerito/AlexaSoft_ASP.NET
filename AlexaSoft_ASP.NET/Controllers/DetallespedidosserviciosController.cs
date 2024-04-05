@@ -60,7 +60,7 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdDetallePedidoServicio,IdPaquete,IdPedido,Precio")] Detallespedidosservicio detallespedidosservicio)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 _context.Add(detallespedidosservicio);
                 await _context.SaveChangesAsync();

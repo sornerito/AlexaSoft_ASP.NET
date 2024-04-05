@@ -62,24 +62,23 @@
                 @Html.DisplayFor(modelItem => item.MotivoAnular)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Total)
+                $@Html.DisplayFor(modelItem => item.Total)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Iva)
+                @Html.DisplayFor(modelItem => item.Iva)%
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdColaboradorNavigation.IdColaborador)
+                @Html.DisplayFor(modelItem => item.IdColaboradorNavigation.Nombre)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IdPedidoNavigation.IdPedido)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdUsuarioNavigation.IdUsuario)
+                @Html.DisplayFor(modelItem => item.IdUsuarioNavigation.Nombre)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.IdVenta" class="btn btn-l fondoOro text-light">Editar</a>
                 <!-- <a asp-action="Details" asp-route-id="@item.IdVenta">Details</a> -->
-                <a asp-action="Delete" asp-route-id="@item.IdVenta" class="btn btn-l fondoVino text-light">Eliminar</a>
             </td>
         </tr>
 }

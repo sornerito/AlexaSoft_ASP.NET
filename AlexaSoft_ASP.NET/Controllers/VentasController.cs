@@ -62,8 +62,11 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdVenta,NumeroFactura,IdPedido,IdColaborador,Fecha,MotivoAnular,IdUsuario,Total,Iva")] Venta venta)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
+                // Generar el número de factura automáticamente
+                venta.NumeroFactura = GenerateInvoiceNumber();
+                venta.Iva = 19;
                 _context.Add(venta);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -105,10 +108,11 @@ namespace AlexaSoft_ASP.NET.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 try
-                {
+                {   
+                    venta.Iva = 19;
                     _context.Update(venta);
                     await _context.SaveChangesAsync();
                 }
@@ -175,5 +179,27 @@ namespace AlexaSoft_ASP.NET.Controllers
         {
           return (_context.Ventas?.Any(e => e.IdVenta == id)).GetValueOrDefault();
         }
+
+        // Método para generar el número de factura
+        private string GenerateInvoiceNumber()
+        {
+            string prefix = "FACT-" + DateTime.Now.Year.ToString() + "-";
+            string lastInvoiceNumber = _context.Ventas.OrderBy(v => v.IdVenta).Select(v => v.NumeroFactura).LastOrDefault();
+            int lastNumber = 0;
+
+            if (!string.IsNullOrEmpty(lastInvoiceNumber))
+            {
+                // Extraer el número de factura anterior y aumentarlo en uno
+                string lastNumberStr = lastInvoiceNumber.Split('-').Last();
+                if (int.TryParse(lastNumberStr, out lastNumber))
+                {
+                    lastNumber++;
+                }
+            }
+
+            string invoiceNumber = prefix + lastNumber.ToString().PadLeft(3, '0');
+            return invoiceNumber;
+        }
+
     }
 }

@@ -74,3 +74,8 @@ VALUES
 insert into alexa_soft.clientes(nombre, instagram, correo, telefono, contrasena, estado, fechaInteraccion, idRol) 
 VALUES 
 ('Brilis', 'jBrilis', 'brilis@gmail.com', '3052364111', 'jesusbrilis', 'Activo', CURRENT_TIMESTAMP, 3)
+
+--Este ALTER TABLE es para el campo de fechaFinalizacion en la tabla pedidos ya que la necesito nula para que no me coja campos innecesarios, gracias :D
+
+ALTER TABLE alexa_soft.pedidos
+ALTER COLUMN fechaFinalizacion DATETIME NULL;
