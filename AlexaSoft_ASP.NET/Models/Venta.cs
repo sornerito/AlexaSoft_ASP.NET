@@ -21,7 +21,7 @@ namespace AlexaSoft_ASP.NET.Models
         [DataType(DataType.Date)]
         public DateTime Fecha { get; set; }
 
-        public string MotivoAnular { get; set; }
+        public string? MotivoAnular { get; set; }
 
         [Required(ErrorMessage = "El ID del usuario es obligatorio.")]
         public int IdUsuario { get; set; }

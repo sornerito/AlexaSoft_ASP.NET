@@ -57,7 +57,10 @@
                 <td>@Html.DisplayFor(modelItem => item.IdPedidoNavigation.IdPedido)</td>
                 <td>@Html.DisplayFor(modelItem => item.IdUsuarioNavigation.Nombre)</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.IdVenta" class="btn btn-l fondoOro text-light">Editar</a>
+                    @if (string.IsNullOrWhiteSpace(item.MotivoAnular))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.IdVenta" class="btn btn-l fondoOro text-light">Editar</a>
+                    }
                 </td>
             </tr>
         }

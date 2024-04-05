@@ -33,11 +33,11 @@
         </div>
         @if (Model.Estado == "Aceptado" || Model.Estado == "Cancelado")
 {
-    <div class="form-group">
-         <label asp-for="FechaFinalizacion" hidden class="control-label"></label>
-         <input asp-for="FechaFinalizacion" hidden class="form-control" disabled />
-        <span asp-validation-for="FechaFinalizacion" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+             <label asp-for="FechaFinalizacion" hidden class="control-label"></label>
+             <input asp-for="FechaFinalizacion" hidden class="form-control" disabled />
+            <span asp-validation-for="FechaFinalizacion" class="text-danger"></span>
+        </div>
 }
         <div class="form-group">
             <label asp-for="Estado" class="control-label"></label>

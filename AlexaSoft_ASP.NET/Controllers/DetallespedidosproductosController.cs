@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AlexaSoft_ASP.NET.Models;
+using AlexaSoft_ASP.NET.Utilities;
 
 namespace AlexaSoft_ASP.NET.Controllers
 {
@@ -21,6 +22,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Detallespedidosproductos
         public async Task<IActionResult> Index()
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             var alexasoftContext = _context.Detallespedidosproductos.Include(d => d.IdPedidoNavigation).Include(d => d.IdProductoNavigation);
             return View(await alexasoftContext.ToListAsync());
         }
@@ -28,6 +33,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Detallespedidosproductos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Detallespedidosproductos == null)
             {
                 return NotFound();
@@ -60,9 +69,29 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdDetallePedidoProducto,IdPedido,IdProducto,UnidadesXproducto,PrecioUnitario")] Detallespedidosproducto detallespedidosproducto)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (!ModelState.IsValid)
             {
-                _context.Add(detallespedidosproducto);
+
+                var producto = await _context.Productos.FindAsync(detallespedidosproducto.IdProducto);
+
+                if (producto != null)
+                {
+                    if (detallespedidosproducto.UnidadesXproducto > producto.Unidades)
+                    {
+                        ModelState.AddModelError("Cantidad", "La cantidad deseada excede la cantidad disponible.");
+                        ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "Nombre", detallespedidosproducto.IdProducto);
+                        return View(detallespedidosproducto);
+                    }
+
+                    producto.Unidades -= detallespedidosproducto.UnidadesXproducto;
+                    _context.Update(producto);
+                
+                }
+            _context.Add(detallespedidosproducto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -74,6 +103,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Detallespedidosproductos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Detallespedidosproductos == null)
             {
                 return NotFound();
@@ -96,6 +129,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdDetallePedidoProducto,IdPedido,IdProducto,UnidadesXproducto,PrecioUnitario")] Detallespedidosproducto detallespedidosproducto)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id != detallespedidosproducto.IdDetallePedidoProducto)
             {
                 return NotFound();
@@ -129,6 +166,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Detallespedidosproductos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Detallespedidosproductos == null)
             {
                 return NotFound();
@@ -151,6 +192,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (_context.Detallespedidosproductos == null)
             {
                 return Problem("Entity set 'AlexasoftContext.Detallespedidosproductos'  is null.");

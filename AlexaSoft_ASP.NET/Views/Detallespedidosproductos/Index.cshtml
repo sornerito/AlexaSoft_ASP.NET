@@ -49,7 +49,7 @@
                 @Html.DisplayFor(modelItem => item.IdPedidoNavigation.IdPedido)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdProductoNavigation.IdProducto)
+                    @Html.DisplayFor(modelItem => item.IdProductoNavigation.Nombre)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.IdDetallePedidoProducto" class="btn btn-l fondoOro text-light">Editar</a>

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AlexaSoft_ASP.NET.Models;
+using AlexaSoft_ASP.NET.Utilities;
 
 namespace AlexaSoft_ASP.NET.Controllers
 {
@@ -21,6 +22,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Detallespedidosservicios
         public async Task<IActionResult> Index()
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             var alexasoftContext = _context.Detallespedidosservicios.Include(d => d.IdPaqueteNavigation).Include(d => d.IdPedidoNavigation);
             return View(await alexasoftContext.ToListAsync());
         }
@@ -28,6 +33,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Detallespedidosservicios/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Detallespedidosservicios == null)
             {
                 return NotFound();
@@ -48,6 +57,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Detallespedidosservicios/Create
         public IActionResult Create()
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             ViewData["IdPaquete"] = new SelectList(_context.Paquetes, "IdPaquete", "IdPaquete");
             ViewData["IdPedido"] = new SelectList(_context.Pedidos, "IdPedido", "IdPedido");
             return View();
@@ -60,6 +73,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdDetallePedidoServicio,IdPaquete,IdPedido,Precio")] Detallespedidosservicio detallespedidosservicio)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (!ModelState.IsValid)
             {
                 _context.Add(detallespedidosservicio);
@@ -74,6 +91,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Detallespedidosservicios/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Detallespedidosservicios == null)
             {
                 return NotFound();
@@ -96,6 +117,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdDetallePedidoServicio,IdPaquete,IdPedido,Precio")] Detallespedidosservicio detallespedidosservicio)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id != detallespedidosservicio.IdDetallePedidoServicio)
             {
                 return NotFound();
@@ -129,6 +154,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Detallespedidosservicios/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Detallespedidosservicios == null)
             {
                 return NotFound();
@@ -151,6 +180,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (_context.Detallespedidosservicios == null)
             {
                 return Problem("Entity set 'AlexasoftContext.Detallespedidosservicios'  is null.");

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AlexaSoft_ASP.NET.Models;
+using AlexaSoft_ASP.NET.Utilities;
 
 namespace AlexaSoft_ASP.NET.Controllers
 {
@@ -21,6 +22,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Pedidos
         public async Task<IActionResult> Index()
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             var pedidos = await _context.Pedidos
                         .Include(p => p.IdClienteNavigation)
                         .Include(p => p.IdColaboradorNavigation)
@@ -33,6 +38,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Pedidos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Pedidos == null)
             {
                 return NotFound();
@@ -53,6 +62,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Pedidos/Create
         public IActionResult Create()
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "Nombre");
             ViewData["IdColaborador"] = new SelectList(_context.Colaboradores, "IdColaborador", "Nombre");
             return View();
@@ -65,6 +78,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdPedido,FechaCreacion,FechaFinalizacion,Estado,Total,Iva,IdCliente,IdColaborador")] Pedido pedido)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (!ModelState.IsValid)
             {
                 pedido.Estado = "Pendiente";
@@ -83,6 +100,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Pedidos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Pedidos == null)
             {
                 return NotFound();
@@ -105,6 +126,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdPedido,FechaCreacion,FechaFinalizacion,Estado,Total,Iva,IdCliente,IdColaborador")] Pedido pedido)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id != pedido.IdPedido)
             {
                 return NotFound();
@@ -146,6 +171,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Pedidos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Pedidos == null)
             {
                 return NotFound();
@@ -168,6 +197,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (_context.Pedidos == null)
             {
                 return Problem("Entity set 'AlexasoftContext.Pedidos'  is null.");

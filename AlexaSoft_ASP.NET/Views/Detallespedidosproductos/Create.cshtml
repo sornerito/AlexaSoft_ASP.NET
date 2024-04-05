@@ -40,18 +40,15 @@
             </div>
             <div class="form-group">
                 <label asp-for="PrecioUnitario" class="control-label"></label>
-                <input asp-for="PrecioUnitario" class="form-control" />
+                <input asp-for="PrecioUnitario" class="form-control" asp-items="ViewBag.Precio" />
                 <span asp-validation-for="PrecioUnitario" class="text-danger"></span>
             </div>
             <br />
             <div class="mb-3 row">
                 <div class="text-center">
-                    <button type="button" id="botonCrear" class="btn btn-lg fondoVino text-light">
-                        Crear
-                        Detalle
-                    </button>
+                    <input type="submit" value="Crear Detalle" class="btn btn-lg fondoVino text-light">
                 </div>
-            </div><!--Fin Row-->
+            </div>
         </form>
         <br>
     </div>
