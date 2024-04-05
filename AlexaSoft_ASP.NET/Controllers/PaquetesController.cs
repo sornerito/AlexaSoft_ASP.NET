@@ -52,7 +52,8 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Paquetes/Create
         public IActionResult Create()
         {
-            ViewData["IdServicio"] = new SelectList(_context.Servicios, "IdServicio", "Nombre");
+            var servicios = _context.Servicios.ToList();
+            ViewBag.servicios = servicios;
 
             return View();
         }
@@ -61,83 +62,101 @@ namespace AlexaSoft_ASP.NET.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdPaquete,Nombre,Descripcion,Estado")] Paquete paquete, int idServicio)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(paquete);
-                int compraSaved = await _context.SaveChangesAsync();
+        public async Task<IActionResult> Create(Paquete role, double[] servicios)
+        {         
+                _context.Paquetes.Add(role);
+                _context.SaveChanges();
 
-                if (compraSaved > 0)
+                foreach (int permisoId in servicios)
                 {
 
-                    PaquetesServicio paquetesServicio = new PaquetesServicio
+                    PaquetesServicio rolesPermiso = new PaquetesServicio
                     {
-                        IdPaquete = paquete.IdPaquete,
-                        IdServicio = idServicio,
+                        IdPaquete = role.IdPaquete,
+                        IdServicio = permisoId
                     };
 
-                    _context.PaquetesServicios.Add(paquetesServicio);
-                    await _context.SaveChangesAsync();
+                    _context.PaquetesServicios.Add(rolesPermiso);
+                    _context.SaveChanges();
                 }
+
                 return RedirectToAction(nameof(Index));
-
-            }
-
-            return View(paquete);
+            
+            return View(role);
         }
 
-
-    // GET: Paquetes/Edit/5
-    public async Task<IActionResult> Edit(int? id)
+        // GET: Paquetes/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Paquetes == null)
+            var rol = await _context.Paquetes
+            .Include(r => r.PaquetesServicios)
+            .ThenInclude(rp => rp.IdServicioNavigation)
+            .FirstOrDefaultAsync(r => r.IdPaquete == id);
+            if (rol == null)
             {
                 return NotFound();
             }
-
-            var paquete = await _context.Paquetes.FindAsync(id);
-            if (paquete == null)
-            {
-                return NotFound();
-            }
-            return View(paquete);
+            var servicio = _context.Servicios.ToList();
+            ViewBag.Servicios = servicio;
+            return View(rol);
         }
 
-        // POST: Paquetes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Roles/Edit/
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdPaquete,Nombre,Descripcion,Estado")] Paquete paquete)
+        public async Task<IActionResult> Edit(int id, Paquete role, int[] servicios)
         {
-            if (id != paquete.IdPaquete)
-            {
-                return NotFound();
-            }
-
+            
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(paquete);
+                    //Guarda datos de la tabla Rol (solo el nombre practicamente)
+                    _context.Update(role);
+                    await _context.SaveChangesAsync();//actualiza cambios
+
+                    //el rol con los registros que le corresponden de la tabla RolesPermisos
+                    var rol = await _context.Paquetes
+                        .Include(r => r.PaquetesServicios)
+                        .FirstOrDefaultAsync(r => r.IdPaquete == id);
+
+                    //le hace un ciclo a cada registro, y revisa que este dentro de los permisos enviados en el formulario
+                    foreach (var rp in rol.PaquetesServicios.ToList())
+                    {
+                        if (!servicios.Contains(rp.IdServicio))
+                        {
+                            //si en la lista de checkboxes ya no se encuentra el id, significa que hay que removerlo
+                            _context.PaquetesServicios.Remove(rp);
+                        }
+                    }
+
+                    //esta lista reccorre los checkboxes (idPermisos) enviados por el formulario
+                    foreach (var servicioId in servicios)
+                    {
+                        //Si un permiso ENVIADO no coincide con ninguno de los permisos que ya estaban, SE CREA
+                        if (!rol.PaquetesServicios.Any(rp => rp.IdServicio == servicioId))
+                        {
+                            PaquetesServicio rolesPermiso = new PaquetesServicio
+                            {
+                                IdPaquete = role.IdPaquete,
+                                IdServicio = servicioId
+                            };
+                            _context.PaquetesServicios.Add(rolesPermiso);
+                        }
+                        //Si se encuentra el Id ENVIADO en los Ids que YA ESTABAN, no se hace nada
+                    }
+                    //Se guardan los cambios una sola vez
                     await _context.SaveChangesAsync();
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PaqueteExists(paquete.IdPaquete))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
+                    
                         throw;
-                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(paquete);
+            return View(role);
         }
 
         // GET: Paquetes/Delete/5

@@ -21,8 +21,30 @@
                 <label asp-for="Descripcion" class="control-label"></label>
                 <input asp-for="Descripcion" class="form-control" />
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
+                <input asp-for="Estado" type="hidden" value="Activo" />
             </div>
-           
+           <table>
+               <tr>
+                   <td>Servicio</td>
+                   <td>Agregar al paquete</td>
+               </tr>
+                @foreach (var item in ViewBag.servicios)
+                {
+                    <tr>
+                        <td scope="col" style="width: 10%;">@item.Nombre</td>
+
+                      
+                        <td scope="col" style="width: 10%;" class="text-center">
+
+                            <div class="form-check form-switch d-inline-block">
+                                <input class="form-check-input" type="checkbox" name="servicios" id="checkbox-@item.IdServicio" value="@item.IdServicio" id="flexSwitchCheckDefault">
+                            </div>
+
+
+                        </td>
+                    </tr>
+                }
+           </table>
 
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

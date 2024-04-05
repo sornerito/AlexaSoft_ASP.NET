@@ -4,7 +4,15 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6"> 
+            <h1 class="text-center">Paquetes</h1>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -33,25 +41,23 @@
                 <td class="text-center px-3">
                     <p class="m-0">
                         Estado:
-
                         <div class="form-check form-switch d-inline-block">
                             <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @(item.Estado == "Activo" ? "checked" : "") onchange="cambiarEstado('@item.IdPaquete')">
                         </div>
-
                     </p>
                 </td>
                 <td scope="col" style="width: 60%;">
                     <p>
                         @string.Join(", ", item.PaquetesServicios.Select(Ps => Ps.IdServicioNavigation.Nombre))
                     </p>
-
                 </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdPaquete">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdPaquete">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdPaquete">Delete</a>
-            </td>
+                <td>
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.IdPaquete">Editar</a>
+                    <a class="btn btn-success" asp-action="Details" asp-route-id="@item.IdPaquete">Detalle</a>
+                    <a class="btn btn-danger delete-btn" asp-action="Delete" asp-route-id="@item.IdPaquete">Eliminar</a>
+                </td>
         </tr>
+      
 }
     </tbody>
 </table>
