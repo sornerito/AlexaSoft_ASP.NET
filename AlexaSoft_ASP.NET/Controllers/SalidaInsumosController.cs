@@ -47,7 +47,19 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: SalidaInsumos/Create
         public IActionResult Create()
         {
-            ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "Nombre");
+            var productosActivos = _context.Productos.Where(p => p.Estado == "Activo").ToList();
+
+           
+            var productosSelectList = productosActivos.Select(p => new SelectListItem
+            {
+                Value = p.IdProducto.ToString(),
+                Text = p.Nombre
+            }).ToList();
+
+            
+            ViewData["IdProducto"] = new SelectList(productosSelectList, "Value", "Text");
+
+
             return View();
         }
 
@@ -60,12 +72,12 @@ namespace AlexaSoft_ASP.NET.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Obtener el producto relacionado con el IdProducto
+                
                 var producto = await _context.Productos.FindAsync(salidaInsumo.IdProducto);
 
                 if (producto != null)
                 {
-                    // Verificar si la cantidad de insumos a sacar es mayor que la cantidad disponible
+                    
                     if (salidaInsumo.Cantidad > producto.Unidades)
                     {
                         ModelState.AddModelError("Cantidad", "La cantidad deseada excede la cantidad disponible.");
@@ -73,7 +85,6 @@ namespace AlexaSoft_ASP.NET.Controllers
                         return View(salidaInsumo);
                     }
 
-                    // Actualizar las unidades del producto
                     producto.Unidades -= salidaInsumo.Cantidad;
                     _context.Update(producto);
                 }
@@ -84,7 +95,7 @@ namespace AlexaSoft_ASP.NET.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Si el modelo no es válido, devolver la vista con el modelo y los datos necesarios para el dropdown
+            
             ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "Nombre", salidaInsumo.IdProducto);
             return View(salidaInsumo);
         }
@@ -130,7 +141,6 @@ namespace AlexaSoft_ASP.NET.Controllers
                         var producto = await _context.Productos.FindAsync(salidaInsumo.IdProducto);
                         if (producto != null)
                         {
-                            // Agregar las unidades de la salida de insumo a las unidades del producto
                             producto.Unidades += salidaInsumo.Cantidad;
                             _context.Update(producto);
                         }
