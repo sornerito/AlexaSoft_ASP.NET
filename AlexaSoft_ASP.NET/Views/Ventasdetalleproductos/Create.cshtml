@@ -35,7 +35,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="PrecioUnitario" class="control-label"></label>
-                <input asp-for="PrecioUnitario" class="form-control" />
+                <input placeholder="Escogiendo el producto, se vera el precio" asp-for="PrecioUnitario" class="form-control" id="PrecioUnitario" readonly />
                 <span asp-validation-for="PrecioUnitario" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -53,6 +53,15 @@
     </div>
 
 <script>
+    $(document).ready(function () {
+        $('#IdProducto').change(function () {
+            var productId = $(this).val();
+            var precio = $('#PrecioUnitario');
+            var precioProducto = @Html.Raw(Json.Serialize(ViewBag.Precios));
+            precio.val(precioProducto[productId]);
+        });
+    });
+
     //Funcion Volver
     function volver() {
         window.history.back();

@@ -55,10 +55,21 @@ namespace AlexaSoft_ASP.NET.Controllers
         }
 
         // GET: Detallespedidosproductos/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Pedidos"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             ViewData["IdPedido"] = new SelectList(_context.Pedidos, "IdPedido", "IdPedido");
-            ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "IdProducto");
+            ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "Nombre");
+
+            // Obtener el precio del producto
+            var productos = await _context.Productos.ToListAsync();
+            var precios = productos.ToDictionary(p => p.IdProducto, p => p.Precio);
+
+            ViewBag.Precios = precios;
+
             return View();
         }
 
@@ -82,21 +93,21 @@ namespace AlexaSoft_ASP.NET.Controllers
                 {
                     if (detallespedidosproducto.UnidadesXproducto > producto.Unidades)
                     {
-                        ModelState.AddModelError("Cantidad", "La cantidad deseada excede la cantidad disponible.");
+                        ModelState.AddModelError("UnidadesXproducto", "La cantidad deseada excede la cantidad disponible.");
                         ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "Nombre", detallespedidosproducto.IdProducto);
                         return View(detallespedidosproducto);
                     }
 
                     producto.Unidades -= detallespedidosproducto.UnidadesXproducto;
                     _context.Update(producto);
-                
+
                 }
-            _context.Add(detallespedidosproducto);
+                _context.Add(detallespedidosproducto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdPedido"] = new SelectList(_context.Pedidos, "IdPedido", "IdPedido", detallespedidosproducto.IdPedido);
-            ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "IdProducto", detallespedidosproducto.IdProducto);
+            ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "Nombre", detallespedidosproducto.IdProducto);
             return View(detallespedidosproducto);
         }
 
@@ -118,7 +129,13 @@ namespace AlexaSoft_ASP.NET.Controllers
                 return NotFound();
             }
             ViewData["IdPedido"] = new SelectList(_context.Pedidos, "IdPedido", "IdPedido", detallespedidosproducto.IdPedido);
-            ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "IdProducto", detallespedidosproducto.IdProducto);
+            ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "Nombre", detallespedidosproducto.IdProducto);
+
+            var productos = await _context.Productos.ToListAsync();
+            var precios = productos.ToDictionary(p => p.IdProducto, p => p.Precio);
+
+            ViewBag.Precios = precios;
+
             return View(detallespedidosproducto);
         }
 
@@ -138,10 +155,38 @@ namespace AlexaSoft_ASP.NET.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var originalDetalle = await _context.Detallespedidosproductos.AsNoTracking().FirstOrDefaultAsync(d => d.IdDetallePedidoProducto == id);
+            if (originalDetalle == null)
+            {
+                return NotFound();
+            }
+            var productoOriginal = await _context.Productos.FindAsync(originalDetalle.IdProducto);
+            if (productoOriginal == null)
+            {
+                return NotFound();
+            }
+            var productoNuevo = await _context.Productos.FindAsync(detallespedidosproducto.IdProducto);
+            if (productoNuevo == null)
+            {
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid)
             {
                 try
                 {
+                    productoOriginal.Unidades += originalDetalle.UnidadesXproducto;
+                    if (detallespedidosproducto.UnidadesXproducto > productoNuevo.Unidades)
+                    {
+                        ModelState.AddModelError("UnidadesXproducto", "La modificación excede la cantidad disponible del producto seleccionado.");
+                        ViewData["IdPedido"] = new SelectList(_context.Pedidos, "IdPedido", "IdPedido", detallespedidosproducto.IdPedido);
+                        ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "Nombre", detallespedidosproducto.IdProducto);
+                        return View(detallespedidosproducto);
+                    }
+                    productoNuevo.Unidades -= detallespedidosproducto.UnidadesXproducto;
+
+                    _context.Update(productoOriginal);
+                    _context.Update(productoNuevo);
                     _context.Update(detallespedidosproducto);
                     await _context.SaveChangesAsync();
                 }
@@ -159,7 +204,7 @@ namespace AlexaSoft_ASP.NET.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdPedido"] = new SelectList(_context.Pedidos, "IdPedido", "IdPedido", detallespedidosproducto.IdPedido);
-            ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "IdProducto", detallespedidosproducto.IdProducto);
+            ViewData["IdProducto"] = new SelectList(_context.Productos, "IdProducto", "Nombre", detallespedidosproducto.IdProducto);
             return View(detallespedidosproducto);
         }
 
@@ -196,19 +241,25 @@ namespace AlexaSoft_ASP.NET.Controllers
             {
                 return RedirectToAction("Error", "Home");
             }
-            if (_context.Detallespedidosproductos == null)
-            {
-                return Problem("Entity set 'AlexasoftContext.Detallespedidosproductos'  is null.");
-            }
             var detallespedidosproducto = await _context.Detallespedidosproductos.FindAsync(id);
-            if (detallespedidosproducto != null)
+            if (detallespedidosproducto == null)
             {
-                _context.Detallespedidosproductos.Remove(detallespedidosproducto);
+                return NotFound();
             }
-            
+
+            var producto = await _context.Productos.FindAsync(detallespedidosproducto.IdProducto);
+            if (producto != null)
+            {
+                producto.Unidades += detallespedidosproducto.UnidadesXproducto;
+                _context.Update(producto);
+            }
+
+            _context.Detallespedidosproductos.Remove(detallespedidosproducto);
             await _context.SaveChangesAsync();
+    
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool DetallespedidosproductoExists(int id)
         {
