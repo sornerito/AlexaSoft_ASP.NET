@@ -4,10 +4,18 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <h1 class="text-center">Servicios</h1>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-lg fondoVino text-light">Crear Servicio</a>
 </p>
 <table class="table">
     <thead>
@@ -39,15 +47,34 @@
             <td>
                 @Html.DisplayFor(modelItem => item.TiempoMinutos)
             </td>
+                <td class="text-center px-3">
+                    <p class="m-0">
+                        Estado:
+                        <div class="form-check form-switch d-inline-block">
+                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @(item.Estado == "Activo" ? "checked" : "") onchange="cambiarEstado('@item.IdServicio')">
+                        </div>
+                    </p>
+                </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Estado)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdServicio">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdServicio">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdServicio">Delete</a>
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.IdServicio">Editar</a>
+                    <a class="btn btn-success" asp-action="Details" asp-route-id="@item.IdServicio">Detalle</a>
+                    <a class="btn btn-danger delete-btn" asp-action="Delete" asp-route-id="@item.IdServicio">Eliminar</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+<script>
+    function cambiarEstado(idRol) {
+        $.ajax({
+            url: '@Url.Action("CambiarEstado", "Servicios")',
+            type: 'POST',
+            data: { idservicio: idRol },
+            success: function (data) {
+            },
+            error: function (xhr, status, error) {
+            }
+        });
+    }
+</script>

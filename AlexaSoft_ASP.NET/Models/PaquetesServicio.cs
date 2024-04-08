@@ -13,5 +13,5 @@ public partial class PaquetesServicio
 
     public virtual Paquete IdPaqueteNavigation { get; set; } = null!;
 
-    public virtual Servicio IdServicioNavigation { get; set; } = null!;
+    public virtual Servicio? IdServicioNavigation { get; set; } = null!;
 }

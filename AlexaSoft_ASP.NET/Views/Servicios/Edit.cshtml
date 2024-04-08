@@ -4,12 +4,23 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>Servicio</h4>
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <div onclick="volver()" class="text-center">
+                <i class="fa fa-angle-left fa-3x clickeable"></i>
+            </div>
+        </div>
+        <div class="col-6">
+            <h1 class="text-center">Editar Servicio</h1>
+        </div>
+        <div class="col-3">
+        </div>
+    </div>
+</div>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="container bordeVino px-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="IdServicio" />
@@ -27,22 +38,49 @@
                 <label asp-for="TiempoMinutos" class="control-label"></label>
                 <input asp-for="TiempoMinutos" class="form-control" />
                 <span asp-validation-for="TiempoMinutos" class="text-danger"></span>
+                <input asp-for="Estado" type="hidden" value="Activo" />
             </div>
+            <hr/>
             <div class="form-group">
-                <label asp-for="Estado" class="control-label"></label>
-                <input asp-for="Estado" class="form-control" />
-                <span asp-validation-for="Estado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Editar" class="btn btn-lg fondoVino text-light" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<script>
+    //Funcion Volver
+    function volver() {
+        window.history.back();
+    }
+</script>
+
+<script>
+   //Confirmar guardar
+    function guardarRol() {
+        Swal.fire({
+            title: '¿Quieres modificar el rol?',
+            showCancelButton: true,
+            confirmButtonText: 'Si',
+            cancelButtonText: "No"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Guardando datos...',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    icon: "success"
+                }).then(() => {
+                    document.getElementById("formularioCrearRol").submit();//subir formulario
+                });
+            } else if (result.isDenied) {
+                Swal.fire('No se guardaron los datos nuevos', '', 'info');
+            }
+        });
+    }
+</script>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

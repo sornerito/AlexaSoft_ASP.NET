@@ -4,12 +4,23 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>Paquete</h4>
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <div onclick="volver()" class="text-center">
+                <i class="fa fa-angle-left fa-3x clickeable"></i>
+            </div>
+        </div>
+        <div class="col-6">
+            <h1 class="text-center">Editar Paquete</h1>
+        </div>
+        <div class="col-3">
+        </div>
+    </div>
+</div>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="container bordeVino px-4">
         <form asp-action="Edit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -51,15 +62,20 @@
             </table>
 
             <div class="form-group">
-                <input type="submit" value="Editar" class="btn btn-primary" />
+                <input type="submit" value="Editar" class="btn btn-lg fondoVino text-light" />
             </div>
         </form>
     </div>
 </div>
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script>
+    //Funcion Volver
+    function volver() {
+        window.history.back();
+    }
+</script>

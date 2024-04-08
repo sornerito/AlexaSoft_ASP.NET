@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AlexaSoft_ASP.NET.Models;
+using AlexaSoft_ASP.NET.Utilities;
 
 namespace AlexaSoft_ASP.NET.Controllers
 {
@@ -152,6 +153,21 @@ namespace AlexaSoft_ASP.NET.Controllers
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CambiarEstado(int idservicio)
+        {
+            var rol = await _context.Servicios.FindAsync(idservicio);
+            if (rol == null)
+            {
+                return NotFound();
+            }
+
+            rol.Estado = rol.Estado == "Activo" ? "Desactivado" : "Activo";
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
 
         private bool ServicioExists(int id)
