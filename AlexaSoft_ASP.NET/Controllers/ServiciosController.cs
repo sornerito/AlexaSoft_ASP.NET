@@ -22,7 +22,11 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Servicios
         public async Task<IActionResult> Index()
         {
-              return _context.Servicios != null ? 
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Servicios"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            return _context.Servicios != null ? 
                           View(await _context.Servicios.ToListAsync()) :
                           Problem("Entity set 'AlexasoftContext.Servicios'  is null.");
         }
@@ -30,6 +34,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Servicios/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Servicios"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Servicios == null)
             {
                 return NotFound();
@@ -48,6 +56,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Servicios/Create
         public IActionResult Create()
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Servicios"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             return View();
         }
 
@@ -58,6 +70,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdServicio,Nombre,Descripcion,TiempoMinutos,Estado")] Servicio servicio)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Servicios"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(servicio);
@@ -70,6 +86,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Servicios/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Servicios"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Servicios == null)
             {
                 return NotFound();
@@ -90,6 +110,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdServicio,Nombre,Descripcion,TiempoMinutos,Estado")] Servicio servicio)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Servicios"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id != servicio.IdServicio)
             {
                 return NotFound();
@@ -121,6 +145,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Servicios/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Servicios"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Servicios == null)
             {
                 return NotFound();
@@ -141,6 +169,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Servicios"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (_context.Servicios == null)
             {
                 return Problem("Entity set 'AlexasoftContext.Servicios'  is null.");
@@ -158,6 +190,7 @@ namespace AlexaSoft_ASP.NET.Controllers
         [HttpPost]
         public async Task<IActionResult> CambiarEstado(int idservicio)
         {
+
             var rol = await _context.Servicios.FindAsync(idservicio);
             if (rol == null)
             {

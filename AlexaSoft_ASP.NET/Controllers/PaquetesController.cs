@@ -22,7 +22,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Paquetes
         public async Task<IActionResult> Index()
         {
-            
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Paquetes"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             var paquetesconServicios = _context.Paquetes
             .Include(p => p.PaquetesServicios)
                 .ThenInclude(Ps => Ps.IdServicioNavigation)
@@ -34,6 +37,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Paquetes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Paquetes"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Paquetes == null)
             {
                 return NotFound();
@@ -52,6 +59,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Paquetes/Create 
         public IActionResult Create()
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Paquetes"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             var serviciosActivos = _context.Servicios.Where(s => s.Estado == "Activo").ToList();
             ViewBag.servicios = serviciosActivos;
 
@@ -64,8 +75,12 @@ namespace AlexaSoft_ASP.NET.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         public async Task<IActionResult> Create(Paquete role, double[] servicios)
-        {         
-                _context.Paquetes.Add(role);
+        {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Paquetes"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            _context.Paquetes.Add(role);
                 _context.SaveChanges();
 
                 foreach (int permisoId in servicios)
@@ -89,6 +104,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Paquetes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Paquetes"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             var rol = await _context.Paquetes
             .Include(r => r.PaquetesServicios)
             .ThenInclude(rp => rp.IdServicioNavigation)
@@ -107,7 +126,11 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Paquete role, int[] servicios)
         {
-            
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Paquetes"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -163,6 +186,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         // GET: Paquetes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Paquetes"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (id == null || _context.Paquetes == null)
             {
                 return NotFound();
@@ -183,6 +210,10 @@ namespace AlexaSoft_ASP.NET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!AccesoHelper.TienePermiso(HttpContext, "Gestionar Paquetes"))
+            {
+                return RedirectToAction("Error", "Home");
+            }
             if (_context.Paquetes == null)
             {
                 return Problem("Entity set 'AlexasoftContext.Paquetes'  is null.");
