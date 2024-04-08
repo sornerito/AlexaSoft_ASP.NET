@@ -1,0 +1,124 @@
+﻿@model AlexaSoft_ASP.NET.Models.Cita
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <div onclick="volver()" class="text-center">
+                <i class="fa fa-angle-left fa-3x clickeable"></i>
+            </div>
+        </div>
+        <div class="col-6">
+            <h1 class="text-center">Editar Cita</h1>
+        </div>
+        <div class="col-3">
+        </div>
+    </div>
+</div>
+
+<hr />
+<div class="container bordeVino px-4">
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="IdCita" />
+        <div class="form-group">
+            <label asp-for="Fecha" class="control-label"></label>
+            <input asp-for="Fecha" class="form-control" type="date" readonly />
+            <span asp-validation-for="Fecha" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Hora" class="control-label"></label>
+            <input asp-for="Hora" class="form-control" type="time" readonly />
+            <span asp-validation-for="Hora" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Detalle" class="control-label"></label>
+            <input asp-for="Detalle" class="form-control" readonly />
+            <span asp-validation-for="Detalle" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Estado" class="control-label"></label>
+            <select id="Estado" asp-for="Estado" class="form-control" readonly>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+            </select>
+            <span asp-validation-for="Estado" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="IdCliente" class="control-label">Cliente</label>
+            <select id="IdCliente" asp-for="IdCliente" class="form-control" asp-items="ViewBag.IdCliente" readonly></select>
+            <span asp-validation-for="IdCliente" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="IdPaquete" class="control-label">Paquetes</label>
+            <select id="IdPaquete" asp-for="IdPaquete" class="form-control" asp-items="ViewBag.IdPaquete" readonly></select>
+            <span asp-validation-for="IdPaquete" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="IdHorario" class="control-label">Dia</label>
+            <select id="IdHorario" asp-for="IdHorario" class="form-control" asp-items="ViewBag.IdHorario" readonly></select>
+            <span asp-validation-for="IdHorario" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="IdColaborador" class="control-label">Colaborador</label>
+            <select id="IdColaborador" asp-for="IdColaborador" class="form-control" asp-items="ViewBag.IdColaborador" readonly></select>
+            <span asp-validation-for="IdColaborador" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="IdMotivoCancelacion" class="control-label">Motivo Cancelación</label>
+            <select id="idMotivoCancelacion" class="form-control" asp-for="IdMotivoCancelacion" asp-items="ViewBag.IdMotivoCancelacion"></select>
+            <span asp-validation-for="IdMotivoCancelacion" class="text-danger"></span>
+        </div>
+
+        <br />
+        <div class="mb-3 row">
+            <div class="text-center">
+                <input type="submit" value="Guardar" class="btn btn-lg fondoVino text-light">
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<script>
+
+    //Funcion Volver
+    function volver() {
+        window.history.back();
+    }
+</script>
+<script>
+    document.getElementById("IdColaborador").addEventListener("mousedown", function (event) {
+        event.preventDefault();
+        this.blur();
+        return false;
+    });
+    document.getElementById("IdPaquete").addEventListener("mousedown", function (event) {
+        event.preventDefault();
+        this.blur();
+        return false;
+    });
+    document.getElementById("IdHorario").addEventListener("mousedown", function (event) {
+        event.preventDefault();
+        this.blur();
+        return false;
+    });
+    document.getElementById("IdCliente").addEventListener("mousedown", function (event) {
+        event.preventDefault();
+        this.blur();
+        return false;
+    });
+    document.getElementById("Estado").addEventListener("mousedown", function (event) {
+        event.preventDefault();
+        this.blur();
+        return false;
+    });
+</script>

@@ -1,0 +1,114 @@
+﻿@model IEnumerable<AlexaSoft_ASP.NET.Models.Cita>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <h1 class="text-center">Cita</h1>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
+
+<p>
+    <a asp-action="Create" class="btn btn-lg fondoVino text-light">Crear</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Fecha)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Hora)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Detalle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th>
+                Usuario
+            </th>
+            <th>
+                Colaborador
+            </th>
+            <th>
+                Dia
+            </th>
+            <th>
+                Motivo Cancelación
+            </th>
+            <th>
+                Paquete
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="@(item.IdMotivoCancelacionNavigation.Motivo != "No" ? "inactivo" : "")">
+                <td>
+                    @((item.Fecha).ToString("dd/MM/yyyy"))
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Hora)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Detalle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdClienteNavigation.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdColaboradorNavigation.Nombre)
+                </td>
+                <td>
+                    @{
+                        var diasSemana = new string[] { "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo" };
+                        var diaSemana = item.IdHorarioNavigation.NumeroDia;
+                        var nombreDia = "";
+                        if (diaSemana >= 0 && diaSemana < diasSemana.Length)
+                        {
+                            nombreDia = diasSemana[diaSemana];
+                        }
+                    }
+                    @nombreDia
+                </td>
+                <td>
+                    @if (item.IdMotivoCancelacionNavigation.Motivo != "No")
+                    {
+                        @Html.DisplayFor(modelItem => item.IdMotivoCancelacionNavigation.Motivo)
+                    }
+                    else
+                    {
+                        <text>No</text>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdPaqueteNavigation.Nombre)
+                </td>
+                <td>
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.IdCita">Edit</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.IdCita">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<style>
+    .inactivo {
+        color: #666;
+        background-color: #f2f2f2;
+    }
+</style>

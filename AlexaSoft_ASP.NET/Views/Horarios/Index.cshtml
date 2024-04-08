@@ -1,0 +1,62 @@
+﻿@model IEnumerable<AlexaSoft_ASP.NET.Models.Horario>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <h1 class="text-center">Horario</h1>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NumeroDia)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InicioJornada)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FinJornada)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+    <tr class="@(item.Estado == "Inactivo" ? "inactivo" : "")">
+        <td>
+            @Html.DisplayFor(modelItem => item.NumeroDia)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InicioJornada)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FinJornada)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Estado)
+        </td>
+        <td>
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.IdHorario">Edit</a>
+        </td>
+    </tr>
+}
+    </tbody>
+</table>
+
+<style>
+    .inactivo {
+        color: #666; 
+        background-color: #f2f2f2;
+    }
+</style>

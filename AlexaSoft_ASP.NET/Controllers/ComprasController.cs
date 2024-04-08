@@ -83,10 +83,17 @@ namespace AlexaSoft_ASP.NET.Controllers
             {
                 _context.Add(compra);
                 int compraSaved = await _context.SaveChangesAsync();
+                if (Unidades == null)
+                {
+                    ModelState.AddModelError("Ingrese una cantidad", "Ingrese una cantidad.");
+                    ;
+                    return View(compra);
+                }
 
                 if (compraSaved > 0)
                 {
                     int i = Guid.NewGuid().GetHashCode();
+
 
                     Detallesproductosxcompra detallesproductosxcompra = new Detallesproductosxcompra
                     {

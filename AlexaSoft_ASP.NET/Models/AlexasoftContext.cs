@@ -209,9 +209,6 @@ public partial class AlexasoftContext : DbContext
             entity.Property(e => e.Estado)
                 .HasMaxLength(11)
                 .HasColumnName("estado");
-            entity.Property(e => e.FechaInteraccion)
-                .HasColumnType("date")
-                .HasColumnName("fechaInteraccion");
             entity.Property(e => e.IdRol).HasColumnName("idRol");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(100)

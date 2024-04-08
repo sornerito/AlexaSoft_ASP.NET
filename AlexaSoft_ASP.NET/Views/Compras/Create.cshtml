@@ -47,10 +47,12 @@
                 <label id="IdProductos" class="control-label"></label>
                 <select id="idProducto" name="idProducto" class="form-control" asp-items="ViewBag.IdProducto"></select>
             </div>
-            <div class="form-group">
-                <label id="Unidades" class="control-label">Unidades</label>
-                <input id="Unidades" name="Unidades" class="form-control" />
-            </div>
+        <div class="form-group">
+            <label id="Unidades" class="control-label">Unidades</label>
+            <input id="Unidades" name="Unidades" class="form-control" type="number" placeholder="Ingrese solo numero" required pattern="[0-9]+" title="Ingrese solo números" />
+            <span class="text-danger" id="unidadesError"></span>
+        </div>
+
             <br />
             <div class="mb-3 row">
                 <div class="text-center">
@@ -60,7 +62,11 @@
        </form>
 </div>
 
-
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
 
 
 
