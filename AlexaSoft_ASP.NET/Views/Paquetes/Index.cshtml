@@ -29,15 +29,15 @@
             <th>
                 @Html.DisplayNameFor(model => model.Estado)
             </th>
-            <th scope="col" style="width: 60%;">IdServicio</th>
+            <th scope="col" >IdServicio</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
             <tr>
-                <td scope="col" style="width: 10%;">@item.Nombre</td>
-                <td scope="col" style="width: 20%;">@item.Descripcion</td>
+                <td scope="col">@item.Nombre</td>
+                <td scope="col">@item.Descripcion</td>
                 <td class="text-center px-3">
                     <p class="m-0">
                         Estado:
@@ -46,7 +46,7 @@
                         </div>
                     </p>
                 </td>
-                <td scope="col" style="width: 60%;">
+                <td scope="col">
                     <p>
                         @string.Join(", ", item.PaquetesServicios.Select(Ps => Ps.IdServicioNavigation.Nombre))
                     </p>

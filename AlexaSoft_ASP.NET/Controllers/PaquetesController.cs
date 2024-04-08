@@ -49,11 +49,12 @@ namespace AlexaSoft_ASP.NET.Controllers
             return View(paquete);
         }
 
-        // GET: Paquetes/Create
+        // GET: Paquetes/Create 
         public IActionResult Create()
         {
-            var servicios = _context.Servicios.ToList();
-            ViewBag.servicios = servicios;
+            var serviciosActivos = _context.Servicios.Where(s => s.Estado == "Activo").ToList();
+            ViewBag.servicios = serviciosActivos;
+
 
             return View();
         }
