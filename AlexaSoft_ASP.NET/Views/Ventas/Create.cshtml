@@ -30,7 +30,21 @@
         </div>
         <div class="form-group">
             <label asp-for="IdColaborador" class="control-label"></label>
-            <select asp-for="IdColaborador" class ="form-control" asp-items="ViewBag.IdColaborador"></select>
+            <select asp-for="IdColaborador" class="form-control" asp-items="ViewBag.IdColaborador"></select>
+        @{
+            var colaboradoresDisponibles = ViewBag.IdColaborador as SelectList;
+            if (colaboradoresDisponibles != null && colaboradoresDisponibles.Count() > 0)
+            {
+                foreach (var item in colaboradoresDisponibles)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            }
+            else
+            {
+                <option disabled>No hay colaboradores activos disponibles</option>
+            }
+        }
         </div>
         <div class="form-group">
             <label asp-for="Fecha" class="control-label"></label>

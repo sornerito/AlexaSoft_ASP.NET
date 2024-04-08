@@ -62,9 +62,19 @@ namespace AlexaSoft_ASP.NET.Controllers
             {
                 return RedirectToAction("Error", "Home");
             }
-            ViewData["IdColaborador"] = new SelectList(_context.Colaboradores, "IdColaborador", "IdColaborador");
+            var colaboradoresActivos = _context.Colaboradores.Where(p => p.Estado == "Activo").ToList();
+
+
+            var colaboradoresSelectList = colaboradoresActivos.Select(p => new SelectListItem
+            {
+                Value = p.IdColaborador.ToString(),
+                Text = p.Nombre
+            }).ToList();
+
+
+            ViewData["IdColaborador"] = new SelectList(colaboradoresSelectList, "Value", "Text");
             ViewData["IdPedido"] = new SelectList(_context.Pedidos, "IdPedido", "IdPedido");
-            ViewData["IdUsuario"] = new SelectList(_context.Usuarios, "IdUsuario", "IdUsuario");
+            ViewData["IdUsuario"] = new SelectList(_context.Usuarios, "IdUsuario", "Nombre");
             return View();
         }
 
