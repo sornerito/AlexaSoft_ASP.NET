@@ -17,7 +17,7 @@
 <p>
     <a asp-action="Create" class="btn btn-lg fondoVino text-light">Crear Paquete</a>
 </p>
-<table class="table">
+<table class="table fs-6 table-bordered table-responsive" style="overflow:auto;">
     <thead>
         <tr>
             <th>
@@ -30,6 +30,7 @@
                 @Html.DisplayNameFor(model => model.Estado)
             </th>
             <th scope="col" >IdServicio</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>

@@ -17,7 +17,7 @@
 <p>
     <a asp-action="Create" class="btn btn-lg fondoVino text-light">Crear Servicio</a>
 </p>
-<table class="table">
+<table class="table fs-6 table-bordered table-responsive" style="overflow:auto;">
     <thead>
         <tr>
             <th>
@@ -32,7 +32,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Estado)
             </th>
-            <th></th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -63,7 +63,7 @@
         </tr>
 }
     </tbody>
-</table>
+</tableid>
 
 <script>
     function cambiarEstado(idRol) {

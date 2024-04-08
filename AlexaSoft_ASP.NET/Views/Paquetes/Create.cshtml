@@ -16,11 +16,12 @@
         </div>
         <div class="col-3">
         </div>
-    </div>
+    </div> <!--Fin Row-->
 </div>
-<hr />
+<br>
+<br>
 <div class="container bordeVino px-4">
-    <div class="col-md-4">
+    <br>
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -34,7 +35,7 @@
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
                 <input asp-for="Estado" type="hidden" value="Activo" /> 
             </div>
-            <hr/>
+            <br>
            <table>
                <tr>
                    <td>Servicio</td>
@@ -44,14 +45,14 @@
                 {
                     foreach (var item in ViewBag.servicios)
                     {
-                        <tr>
-                            <td scope="col" style="width: 10%;">@item.Nombre</td>
-                            <td scope="col" style="width: 10%;" class="text-center">
-                                <div class="form-check form-switch d-inline-block">
-                                    <input class="form-check-input" type="checkbox" name="servicios" id="checkbox-@item.IdServicio" value="@item.IdServicio" id="flexSwitchCheckDefault">
-                                </div>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td scope="col" style="width: 10%;">@item.Nombre</td>
+                        <td scope="col" style="width: 10%;" class="text-center align-middle">
+                            <div class="form-check form-switch d-inline-block">
+                                <input class="form-check-input" type="checkbox" name="servicios" id="checkbox-@item.IdServicio" value="@item.IdServicio">
+                            </div>
+                        </td>
+                    </tr>
                     }
                 }
                 else
@@ -62,13 +63,14 @@
                 }
 
            </table>
-
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-lg fondoVino text-light" />
+        <br />
+        <div class="mb-3 row">
+            <div class="text-center">
+                <input type="submit" value="Crear ¨Paquete" class="btn btn-lg fondoVino text-light">
             </div>
-
-        </form>
-    </div>
+        </div>
+    </form>
+    <br>
 </div>
 
 

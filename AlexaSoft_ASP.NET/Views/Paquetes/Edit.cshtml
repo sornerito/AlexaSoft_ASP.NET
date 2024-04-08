@@ -16,11 +16,12 @@
         </div>
         <div class="col-3">
         </div>
-    </div>
+    </div> <!--Fin Row-->
 </div>
-<hr />
-<div class="row">
-    <div class="container bordeVino px-4">
+<br>
+<br>
+<div class="container bordeVino px-4">
+    <br>
         <form asp-action="Edit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -54,19 +55,20 @@
                                 }
                                 <input class="form-check-input" type="checkbox" name="servicios" id="checkbox-@item.IdServicio" value="@item.IdServicio" @(isChecked ? "checked" : "")>
                             </div>
-
-
                         </td>
                     </tr>
                 }
             </table>
-
-            <div class="form-group">
-                <input type="submit" value="Editar" class="btn btn-lg fondoVino text-light" />
+        <br />
+        <div class="mb-3 row">
+            <div class="text-center">
+                <input type="submit" value="Editar" class="btn btn-lg fondoVino text-light">
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
+    <br>
 </div>
+
 
 
 @section Scripts {

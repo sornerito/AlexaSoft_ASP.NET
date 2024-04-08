@@ -12,15 +12,16 @@
             </div>
         </div>
         <div class="col-6">
-            <h1 class="text-center">Editar Servicio</h1>
+            <h1 class="text-center">Editar Sericio</h1>
         </div>
         <div class="col-3">
         </div>
-    </div>
+    </div> <!--Fin Row-->
 </div>
-<hr />
-<div class="row">
-    <div class="container bordeVino px-4">
+<br>
+<br>
+<div class="container bordeVino px-4">
+    <br>
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="IdServicio" />
@@ -40,12 +41,14 @@
                 <span asp-validation-for="TiempoMinutos" class="text-danger"></span>
                 <input asp-for="Estado" type="hidden" value="Activo" />
             </div>
-            <hr/>
-            <div class="form-group">
-                <input type="submit" value="Editar" class="btn btn-lg fondoVino text-light" />
+        <br />
+        <div class="mb-3 row">
+            <div class="text-center">
+                <input type="submit" value="Editar" class="btn btn-lg fondoVino text-light">
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
+    <br>
 </div>
 
 <script>
