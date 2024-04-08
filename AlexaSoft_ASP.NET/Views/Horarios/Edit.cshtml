@@ -1,0 +1,69 @@
+﻿@model AlexaSoft_ASP.NET.Models.Horario
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <div onclick="volver()" class="text-center">
+                <i class="fa fa-angle-left fa-3x clickeable"></i>
+            </div>
+        </div>
+        <div class="col-6">
+            <h1 class="text-center">Editar Horario</h1>
+        </div>
+        <div class="col-3">
+        </div>
+    </div>
+</div>
+
+<hr />
+<div class="container bordeVino px-4">
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="IdHorario" />
+        <div class="form-group">
+            <label asp-for="NumeroDia" class="control-label"></label>
+            <input asp-for="NumeroDia" class="form-control" readonly />
+            <span asp-validation-for="NumeroDia" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="InicioJornada" class="control-label"></label>
+            <input asp-for="InicioJornada" class="form-control" />
+            <span asp-validation-for="InicioJornada" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="FinJornada" class="control-label"></label>
+            <input asp-for="FinJornada" class="form-control" />
+            <span asp-validation-for="FinJornada" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Estado" class="control-label"></label>
+            <select asp-for="Estado" class="form-control">
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+            </select>
+            <span asp-validation-for="Estado" class="text-danger"></span>
+        </div>
+        <br />
+        <div class="mb-3 row">
+            <div class="text-center">
+                <input type="submit" value="Guardar" class="btn btn-lg fondoVino text-light">
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+} 
+<script>
+    //Funcion Volver
+    function volver() {
+        window.history.back();
+    }
+</script>

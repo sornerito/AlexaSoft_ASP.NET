@@ -1,0 +1,83 @@
+﻿@model AlexaSoft_ASP.NET.Models.Colaboradore
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <div onclick="volver()" class="text-center">
+                <i class="fa fa-angle-left fa-3x clickeable"></i>
+            </div>
+        </div>
+        <div class="col-6">
+            <h1 class="text-center">Crear Colaborador</h1>
+        </div>
+        <div class="col-3">
+        </div>
+    </div>
+</div>
+<hr />
+
+<div class="container bordeVino px-4">
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Nombre" class="control-label"></label>
+            <input asp-for="Nombre" class="form-control" />
+            <span asp-validation-for="Nombre" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Cedula" class="control-label"></label>
+            <input asp-for="Cedula" class="form-control" />
+            <span asp-validation-for="Cedula" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Correo" class="control-label"></label>
+            <input asp-for="Correo" class="form-control" />
+            <span asp-validation-for="Correo" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Telefono" class="control-label"></label>
+            <input asp-for="Telefono" class="form-control" />
+            <span asp-validation-for="Telefono" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Contrasena" class="control-label">Contraseña</label>
+            <input asp-for="Contrasena" class="form-control" />
+            <span asp-validation-for="Contrasena" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Estado" class="control-label"></label>
+            <select asp-for="Estado" class="form-control">
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+            </select>
+            <span asp-validation-for="Estado" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="IdRol" class="control-label"></label>
+            <select asp-for="IdRol" class="form-control" asp-items="ViewBag.IdRol"></select>
+        </div>
+        <br />
+        <div class="mb-3 row">
+            <div class="text-center">
+                <input type="submit" value="Crear" class="btn btn-lg fondoVino text-light">
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<script>
+    //Funcion Volver
+    function volver() {
+        window.history.back();
+    }
+</script>
